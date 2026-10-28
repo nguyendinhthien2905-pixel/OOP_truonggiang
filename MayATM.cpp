@@ -33,11 +33,6 @@ enum LuaChonLoaiTaiKhoan {
 } // namespace
 
 
-/**********************************************************
- * @Description Nap danh sach tai khoan tu file TaiKhoan.txt
- * @attention   - Chua co file: tao file voi du lieu mau
- *              - Dong sai trong file: bao loi va bo qua dong do
- **********************************************************/
 void MayATM::TaiDuLieu() {
     std::vector<std::string> cacLoi;
     if (!KhoFile::Doc(TEN_FILE_DU_LIEU, m_DanhSach, cacLoi)) {
@@ -66,19 +61,13 @@ void MayATM::TaiDuLieu() {
     }
 }
 
-/**********************************************************
- * @Description Ghi danh sach hien tai ra file
- **********************************************************/
+
 void MayATM::LuuFile() const {
     if (!KhoFile::Ghi(TEN_FILE_DU_LIEU, m_DanhSach)) {
         TienIch::BaoLoi(std::string("Khong the ghi du lieu ra file ") + TEN_FILE_DU_LIEU + ".");
     }
 }
 
-/**********************************************************
- * @Description Tim tai khoan theo so tai khoan
- * @return      Con tro toi tai khoan, nullptr neu khong co
- **********************************************************/
 TaiKhoan* MayATM::TimTaiKhoan(const std::string& soTaiKhoan) const {
     for (std::size_t i = 0; i < m_DanhSach.size(); i++) {
         if (m_DanhSach[i]->LaySoTaiKhoan() == soTaiKhoan) {
@@ -88,10 +77,7 @@ TaiKhoan* MayATM::TimTaiKhoan(const std::string& soTaiKhoan) const {
     return nullptr;
 }
 
-/**********************************************************
- * @Description Hien menu mui ten liet ke tai khoan de nguoi dung chon
- * @return      Con tro toi tai khoan da chon, nullptr neu quay lai / khong co
- **********************************************************/
+
 TaiKhoan* MayATM::ChonTaiKhoan(const std::string& tieuDe) const {
     if (m_DanhSach.empty()) {
         TienIch::XoaManHinh();
@@ -119,9 +105,7 @@ TaiKhoan* MayATM::ChonTaiKhoan(const std::string& tieuDe) const {
     return m_DanhSach[viTri].get();
 }
 
-/**********************************************************
- * @Description In bang danh sach tat ca tai khoan
- **********************************************************/
+
 void MayATM::XemDanhSach() const {
     TienIch::XoaManHinh();
     TienIch::InTieuDe("DANH SACH TAI KHOAN");
@@ -157,9 +141,7 @@ void MayATM::XemDanhSach() const {
     TienIch::TamDung();
 }
 
-/**********************************************************
- * @Description Xem chi tiet mot tai khoan (goi HienThiThongTin da hinh)
- **********************************************************/
+
 void MayATM::XemChiTiet() const {
     TaiKhoan* taiKhoan = ChonTaiKhoan("XEM THONG TIN CHI TIET");
     if (taiKhoan == nullptr) {
@@ -172,9 +154,7 @@ void MayATM::XemChiTiet() const {
     TienIch::TamDung();
 }
 
-/**********************************************************
- * @Description Them tai khoan moi: chon loai, nhap bang operator>>
- **********************************************************/
+
 void MayATM::ThemTaiKhoan() {
     std::vector<std::string> cacLoai;
     cacLoai.push_back("Tai khoan tiet kiem");
@@ -228,9 +208,7 @@ void MayATM::ThemTaiKhoan() {
     TienIch::TamDung();
 }
 
-/**********************************************************
- * @Description Nap tien vao tai khoan da chon
- **********************************************************/
+
 void MayATM::NapTien() {
     TaiKhoan* taiKhoan = ChonTaiKhoan("NAP TIEN - CHON TAI KHOAN");
     if (taiKhoan == nullptr) {
@@ -262,9 +240,7 @@ void MayATM::NapTien() {
     TienIch::TamDung();
 }
 
-/**********************************************************
- * @Description Rut tien tu tai khoan da chon (da hinh: RutTien cua tung loai)
- **********************************************************/
+
 void MayATM::RutTien() {
     TaiKhoan* taiKhoan = ChonTaiKhoan("RUT TIEN - CHON TAI KHOAN");
     if (taiKhoan == nullptr) {
@@ -298,9 +274,7 @@ void MayATM::RutTien() {
     TienIch::TamDung();
 }
 
-/**********************************************************
- * @Description Vong lap menu chinh, ket thuc khi chon "Thoat"
- **********************************************************/
+
 void MayATM::Chay() {
     TaiDuLieu();
 

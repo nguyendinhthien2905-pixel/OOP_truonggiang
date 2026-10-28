@@ -1,7 +1,6 @@
-// =====================================================================
-//  TienIch.h - Cac ham tien ich cho giao dien Console (Windows)
+
 //  Gom: mau sac, xoa man hinh, menu phim mui ten, nhap lieu, dinh dang
-// =====================================================================
+
 #ifndef TIENICH_H_INCLUDED_
 #define TIENICH_H_INCLUDED_
 

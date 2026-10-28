@@ -1,6 +1,3 @@
-// =====================================================================
-//  MayATM.h - Lop quan ly danh sach tai khoan va dieu khien menu ATM
-// =====================================================================
 #ifndef MAYATM_H_INCLUDED_
 #define MAYATM_H_INCLUDED_
 

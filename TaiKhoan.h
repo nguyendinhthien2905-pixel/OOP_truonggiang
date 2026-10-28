@@ -1,6 +1,3 @@
-// =====================================================================
-//  TaiKhoan.h - Lop co so (Base Class) cua he thong tai khoan ngan hang
-// =====================================================================
 #ifndef TAIKHOAN_H_INCLUDED_
 #define TAIKHOAN_H_INCLUDED_
 

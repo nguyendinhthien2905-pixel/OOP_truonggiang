@@ -1,6 +1,4 @@
-// =====================================================================
-//  TienIch.cpp - Cai dat cac ham tien ich cho giao dien Console
-// =====================================================================
+
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
@@ -19,7 +17,7 @@
 
 namespace {
 
-// ---------------------------- Hang so noi bo ------------------------------
+// Hang so noi bo 
 const int DO_RONG_KHUNG = 60;           // Do rong khung tieu de
 const int DO_RONG_MUC_MENU = 56;        // Do rong mot dong menu
 const int SO_MUC_HIEN_THI_TOI_DA = 10;  // Menu dai hon se tu cuon
@@ -155,381 +153,317 @@ void VeMenu(const std::string& tieuDe, const std::vector<std::string>& cacMuc,
 
 namespace TienIch {
 
-// ===========================================================================
-//  CONSOLE
-// ===========================================================================
-
-/**********************************************************
- * @Description Khoi tao console: kich thuoc, tieu de, luu mau mac dinh
- **********************************************************/
-void KhoiTaoConsole() {
-    std::system("mode con: cols=110 lines=36");
-    SetConsoleTitleA("QUAN LY TAI KHOAN NGAN HANG - MAY ATM");
-    CONSOLE_SCREEN_BUFFER_INFO thongTin;
-    if (GetConsoleScreenBufferInfo(LayManHinh(), &thongTin)) {
-        g_mauMacDinh = thongTin.wAttributes;
-    }
-}
-
-/**********************************************************
- * @Description Doi mau chu (giu nguyen mau nen mac dinh)
- **********************************************************/
-void DatMau(Mau mauChu) {
-    std::cout.flush();
-    SetConsoleTextAttribute(LayManHinh(),
-                            static_cast<WORD>(mauChu | (g_mauMacDinh & 0xF0)));
-}
-
-/**********************************************************
- * @Description Doi dong thoi mau chu va mau nen (dung de to sang muc dang chon)
- **********************************************************/
-void DatMauNen(Mau mauChu, Mau mauNen) {
-    std::cout.flush();
-    SetConsoleTextAttribute(LayManHinh(), static_cast<WORD>(mauChu | (mauNen << 4)));
-}
-
-/**********************************************************
- * @Description Tra ve mau mac dinh cua console
- **********************************************************/
-void DatMauMacDinh() {
-    std::cout.flush();
-    SetConsoleTextAttribute(LayManHinh(), g_mauMacDinh);
-}
-
-/**********************************************************
- * @Description Xoa toan bo man hinh va dua con tro ve goc (0, 0)
- **********************************************************/
-void XoaManHinh() {
-    std::cout.flush();
-    HANDLE hManHinh = LayManHinh();
-    CONSOLE_SCREEN_BUFFER_INFO thongTin;
-    if (!GetConsoleScreenBufferInfo(hManHinh, &thongTin)) {
-        std::system("cls");
-        return;
-    }
-    const DWORD soO = static_cast<DWORD>(thongTin.dwSize.X) * thongTin.dwSize.Y;
-    DWORD soDaGhi = 0;
-    COORD goc;
-    goc.X = 0;
-    goc.Y = 0;
-    FillConsoleOutputCharacterA(hManHinh, ' ', soO, goc, &soDaGhi);
-    FillConsoleOutputAttribute(hManHinh, g_mauMacDinh, soO, goc, &soDaGhi);
-    SetConsoleCursorPosition(hManHinh, goc);
-}
-
-/**********************************************************
- * @Description Dat vi tri con tro (cot x, dong y)
- **********************************************************/
-void DatViTriCon(int x, int y) {
-    std::cout.flush();
-    COORD viTri;
-    viTri.X = static_cast<SHORT>(x);
-    viTri.Y = static_cast<SHORT>(y);
-    SetConsoleCursorPosition(LayManHinh(), viTri);
-}
-
-/**********************************************************
- * @Description An / hien con tro nhap nhay
- **********************************************************/
-void HienConTro(bool hien) {
-    CONSOLE_CURSOR_INFO thongTin;
-    if (GetConsoleCursorInfo(LayManHinh(), &thongTin)) {
-        thongTin.bVisible = hien ? TRUE : FALSE;
-        SetConsoleCursorInfo(LayManHinh(), &thongTin);
-    }
-}
-
-// ===========================================================================
-//  PHIM VA MENU
-// ===========================================================================
-
-/**********************************************************
- * @Description Doc mot phim (khong can Enter) va phan loai
- * @attention   Phim mui ten tra ve 2 ma lien tiep: (0 | 224) roi 72/80
- **********************************************************/
-Phim DocPhim() {
-    const int maPhim = _getch();
-    if (maPhim == MA_PHIM_MO_RONG_1 || maPhim == MA_PHIM_MO_RONG_2) {
-        const int maThat = _getch();
-        if (maThat == MA_MUI_TEN_LEN) {
-            return PHIM_LEN;
+    void KhoiTaoConsole() {
+        std::system("mode con: cols=110 lines=36");
+        SetConsoleTitleA("QUAN LY TAI KHOAN NGAN HANG - MAY ATM");
+        CONSOLE_SCREEN_BUFFER_INFO thongTin;
+        if (GetConsoleScreenBufferInfo(LayManHinh(), &thongTin)) {
+            g_mauMacDinh = thongTin.wAttributes;
         }
-        if (maThat == MA_MUI_TEN_XUONG) {
-            return PHIM_XUONG;
+    }
+
+    void DatMau(Mau mauChu) {
+        std::cout.flush();
+        SetConsoleTextAttribute(LayManHinh(),
+            static_cast<WORD>(mauChu | (g_mauMacDinh & 0xF0)));
+    }
+
+
+    void DatMauNen(Mau mauChu, Mau mauNen) {
+        std::cout.flush();
+        SetConsoleTextAttribute(LayManHinh(), static_cast<WORD>(mauChu | (mauNen << 4)));
+    }
+
+
+    void DatMauMacDinh() {
+        std::cout.flush();
+        SetConsoleTextAttribute(LayManHinh(), g_mauMacDinh);
+    }
+
+
+    void XoaManHinh() {
+        std::cout.flush();
+        HANDLE hManHinh = LayManHinh();
+        CONSOLE_SCREEN_BUFFER_INFO thongTin;
+        if (!GetConsoleScreenBufferInfo(hManHinh, &thongTin)) {
+            std::system("cls");
+            return;
+        }
+        const DWORD soO = static_cast<DWORD>(thongTin.dwSize.X) * thongTin.dwSize.Y;
+        DWORD soDaGhi = 0;
+        COORD goc;
+        goc.X = 0;
+        goc.Y = 0;
+        FillConsoleOutputCharacterA(hManHinh, ' ', soO, goc, &soDaGhi);
+        FillConsoleOutputAttribute(hManHinh, g_mauMacDinh, soO, goc, &soDaGhi);
+        SetConsoleCursorPosition(hManHinh, goc);
+    }
+
+
+    void DatViTriCon(int x, int y) {
+        std::cout.flush();
+        COORD viTri;
+        viTri.X = static_cast<SHORT>(x);
+        viTri.Y = static_cast<SHORT>(y);
+        SetConsoleCursorPosition(LayManHinh(), viTri);
+    }
+
+
+    void HienConTro(bool hien) {
+        CONSOLE_CURSOR_INFO thongTin;
+        if (GetConsoleCursorInfo(LayManHinh(), &thongTin)) {
+            thongTin.bVisible = hien ? TRUE : FALSE;
+            SetConsoleCursorInfo(LayManHinh(), &thongTin);
+        }
+    }
+
+
+    //  PHIM VA MENU
+
+    Phim DocPhim() {
+        const int maPhim = _getch();
+        if (maPhim == MA_PHIM_MO_RONG_1 || maPhim == MA_PHIM_MO_RONG_2) {
+            const int maThat = _getch();
+            if (maThat == MA_MUI_TEN_LEN) {
+                return PHIM_LEN;
+            }
+            if (maThat == MA_MUI_TEN_XUONG) {
+                return PHIM_XUONG;
+            }
+            return PHIM_KHAC;
+        }
+        if (maPhim == MA_PHIM_ENTER) {
+            return PHIM_ENTER;
+        }
+        if (maPhim == MA_PHIM_ESC) {
+            return PHIM_ESC;
         }
         return PHIM_KHAC;
     }
-    if (maPhim == MA_PHIM_ENTER) {
-        return PHIM_ENTER;
+
+    \
+        void TamDung() {
+        DatMau(MAU_VANG);
+        std::cout << "\n  Nhan phim bat ky de tiep tuc...";
+        DatMauMacDinh();
+        std::cout.flush();
+        DocPhim();
     }
-    if (maPhim == MA_PHIM_ESC) {
-        return PHIM_ESC;
-    }
-    return PHIM_KHAC;
-}
 
-/**********************************************************
- * @Description Cho nguoi dung nhan mot phim bat ky
- **********************************************************/
-void TamDung() {
-    DatMau(MAU_VANG);
-    std::cout << "\n  Nhan phim bat ky de tiep tuc...";
-    DatMauMacDinh();
-    std::cout.flush();
-    DocPhim();
-}
-
-/**********************************************************
- * @Description Menu dieu huong bang phim mui ten
- *
- * @return      Chi so muc da chon (tu 0), hoac KHONG_CHON neu nhan Esc
- * @attention   Len tren muc dau se quay xuong muc cuoi (va nguoc lai).
- *              Menu dai hon SO_MUC_HIEN_THI_TOI_DA tu dong cuon.
- **********************************************************/
-int ChonMenu(const std::string& tieuDe, const std::vector<std::string>& cacMuc) {
-    const int soMuc = static_cast<int>(cacMuc.size());
-    if (soMuc == 0) {
-        return KHONG_CHON;
-    }
-    const int soDong = (soMuc < SO_MUC_HIEN_THI_TOI_DA) ? soMuc : SO_MUC_HIEN_THI_TOI_DA;
-
-    int viTri = 0;
-    int dau = 0;
-    int ketQua = KHONG_CHON;
-    bool daXong = false;
-
-    HienConTro(false);
-    XoaManHinh();
-    while (!daXong) {
-        if (viTri < dau) {
-            dau = viTri;
+    \
+        int ChonMenu(const std::string& tieuDe, const std::vector<std::string>& cacMuc) {
+        const int soMuc = static_cast<int>(cacMuc.size());
+        if (soMuc == 0) {
+            return KHONG_CHON;
         }
-        if (viTri >= dau + soDong) {
-            dau = viTri - soDong + 1;
-        }
-        VeMenu(tieuDe, cacMuc, viTri, dau, soDong);
+        const int soDong = (soMuc < SO_MUC_HIEN_THI_TOI_DA) ? soMuc : SO_MUC_HIEN_THI_TOI_DA;
 
-        switch (DocPhim()) {
-        case PHIM_LEN:
-            viTri = (viTri + soMuc - 1) % soMuc;
-            break;
-        case PHIM_XUONG:
-            viTri = (viTri + 1) % soMuc;
-            break;
-        case PHIM_ENTER:
-            ketQua = viTri;
-            daXong = true;
-            break;
-        case PHIM_ESC:
-            daXong = true;
-            break;
-        default:
-            break;
+        int viTri = 0;
+        int dau = 0;
+        int ketQua = KHONG_CHON;
+        bool daXong = false;
+
+        HienConTro(false);
+        XoaManHinh();
+        while (!daXong) {
+            if (viTri < dau) {
+                dau = viTri;
+            }
+            if (viTri >= dau + soDong) {
+                dau = viTri - soDong + 1;
+            }
+            VeMenu(tieuDe, cacMuc, viTri, dau, soDong);
+
+            switch (DocPhim()) {
+            case PHIM_LEN:
+                viTri = (viTri + soMuc - 1) % soMuc;
+                break;
+            case PHIM_XUONG:
+                viTri = (viTri + 1) % soMuc;
+                break;
+            case PHIM_ENTER:
+                ketQua = viTri;
+                daXong = true;
+                break;
+            case PHIM_ESC:
+                daXong = true;
+                break;
+            default:
+                break;
+            }
         }
+        HienConTro(true);
+        DatMauMacDinh();
+        XoaManHinh();
+        return ketQua;
     }
-    HienConTro(true);
-    DatMauMacDinh();
-    XoaManHinh();
-    return ketQua;
-}
 
-// ===========================================================================
-//  IN AN
-// ===========================================================================
 
-/**********************************************************
- * @Description In khung tieu de, chu nam giua
- **********************************************************/
-void InTieuDe(const std::string& tieuDe) {
-    const std::string vien = "+" + std::string(DO_RONG_KHUNG - 2, '=') + "+";
-    int khoangTrong = DO_RONG_KHUNG - 2 - static_cast<int>(tieuDe.size());
-    if (khoangTrong < 0) {
-        khoangTrong = 0;
-    }
-    const int leTrai = khoangTrong / 2;
-    const int lePhai = khoangTrong - leTrai;
-
-    DatMau(MAU_XANH_NGOC);
-    std::cout << vien << "\n|";
-    DatMau(MAU_VANG);
-    std::cout << std::string(leTrai, ' ') << tieuDe << std::string(lePhai, ' ');
-    DatMau(MAU_XANH_NGOC);
-    std::cout << "|\n" << vien << "\n";
-    DatMauMacDinh();
-}
-
-/**********************************************************
- * @Description In mot dong "Nhan : Gia tri", cot nhan can deu bang setw
- **********************************************************/
-void InDong(const std::string& nhan, const std::string& giaTri, Mau mauGiaTri) {
-    BaoVeDinhDang baoVe(std::cout);
-    DatMau(MAU_XANH_NGOC);
-    std::cout << "  " << std::left << std::setw(DO_RONG_NHAN) << nhan << ": ";
-    DatMau(mauGiaTri);
-    std::cout << giaTri;
-    DatMauMacDinh();
-    std::cout << "\n";
-}
-
-void BaoLoi(const std::string& thongBao) {
-    DatMau(MAU_DO);
-    std::cout << "  [LOI] " << thongBao << "\n";
-    DatMauMacDinh();
-}
-
-void BaoThanhCong(const std::string& thongBao) {
-    DatMau(MAU_XANH_LA);
-    std::cout << "  [OK] " << thongBao << "\n";
-    DatMauMacDinh();
-}
-
-void BaoThongTin(const std::string& thongBao) {
-    DatMau(MAU_VANG);
-    std::cout << "  [!] " << thongBao << "\n";
-    DatMauMacDinh();
-}
-
-// ===========================================================================
-//  NHAP LIEU
-// ===========================================================================
-
-/**********************************************************
- * @Description Nhap chuoi khong rong, toi da doDaiToiDa ky tu
- **********************************************************/
-bool NhapChuoi(std::istream& is, const std::string& loiNhac, std::string& ketQua, int doDaiToiDa) {
-    std::string dong;
-    while (DocDong(is, loiNhac, dong)) {
-        if (static_cast<int>(dong.size()) > doDaiToiDa) {
-            BaoLoi("Toi da " + std::to_string(doDaiToiDa) + " ky tu.");
-            continue;
+    // In khung tieu de, chu nam giua
+    void InTieuDe(const std::string& tieuDe) {
+        const std::string vien = "+" + std::string(DO_RONG_KHUNG - 2, '=') + "+";
+        int khoangTrong = DO_RONG_KHUNG - 2 - static_cast<int>(tieuDe.size());
+        if (khoangTrong < 0) {
+            khoangTrong = 0;
         }
-        if (dong.find(KY_TU_NGAN_CACH) != std::string::npos) {      // Tranh lam hong file du lieu
-            BaoLoi(std::string("Khong duoc dung ky tu '") + KY_TU_NGAN_CACH + "'.");
-            continue;
-        }
-        ketQua = dong;
-        return true;
+        const int leTrai = khoangTrong / 2;
+        const int lePhai = khoangTrong - leTrai;
+
+        DatMau(MAU_XANH_NGOC);
+        std::cout << vien << "\n|";
+        DatMau(MAU_VANG);
+        std::cout << std::string(leTrai, ' ') << tieuDe << std::string(lePhai, ' ');
+        DatMau(MAU_XANH_NGOC);
+        std::cout << "|\n" << vien << "\n";
+        DatMauMacDinh();
     }
-    return false;
-}
 
-/**********************************************************
- * @Description Nhap chuoi gom dung doDai chu so (vi du so tai khoan)
- **********************************************************/
-bool NhapChuoiSo(std::istream& is, const std::string& loiNhac, int doDai, std::string& ketQua) {
-    std::string dong;
-    while (DocDong(is, loiNhac, dong)) {
-        if (!ChiGomChuSo(dong) || static_cast<int>(dong.size()) != doDai) {
-            BaoLoi("Phai gom dung " + std::to_string(doDai) + " chu so.");
-            continue;
-        }
-        ketQua = dong;
-        return true;
+
+    void InDong(const std::string& nhan, const std::string& giaTri, Mau mauGiaTri) {
+        BaoVeDinhDang baoVe(std::cout);
+        DatMau(MAU_XANH_NGOC);
+        std::cout << "  " << std::left << std::setw(DO_RONG_NHAN) << nhan << ": ";
+        DatMau(mauGiaTri);
+        std::cout << giaTri;
+        DatMauMacDinh();
+        std::cout << "\n";
     }
-    return false;
-}
 
-/**********************************************************
- * @Description Nhap so nguyen khong am trong khoang [nho nhat, lon nhat]
- **********************************************************/
-bool NhapSoNguyen(std::istream& is, const std::string& loiNhac, long long& ketQua,
-                  long long giaTriNhoNhat, long long giaTriLonNhat) {
-    std::string dong;
-    while (DocDong(is, loiNhac, dong)) {
-        if (!ChiGomChuSo(dong) || static_cast<int>(dong.size()) > SO_CHU_SO_TOI_DA) {
-            BaoLoi("Chi duoc nhap so nguyen khong am (toi da 15 chu so).");
-            continue;
-        }
-        const long long giaTri = std::stoll(dong);
-        if (giaTri < giaTriNhoNhat || giaTri > giaTriLonNhat) {
-            BaoLoi("Gia tri phai tu " + DinhDangTien(giaTriNhoNhat)
-                   + " den " + DinhDangTien(giaTriLonNhat) + ".");
-            continue;
-        }
-        ketQua = giaTri;
-        return true;
+    void BaoLoi(const std::string& thongBao) {
+        DatMau(MAU_DO);
+        std::cout << "  [LOI] " << thongBao << "\n";
+        DatMauMacDinh();
     }
-    return false;
-}
 
-/**********************************************************
- * @Description Nhap so thuc (chap nhan dau '.' hoac ',') trong khoang cho phep
- **********************************************************/
-bool NhapSoThuc(std::istream& is, const std::string& loiNhac, double& ketQua,
-                double giaTriNhoNhat, double giaTriLonNhat) {
-    std::string dong;
-    while (DocDong(is, loiNhac, dong)) {
-        double giaTri = 0.0;
-        if (!DocSoThuc(dong, giaTri)) {
-            BaoLoi("Chi duoc nhap so (vi du 5.5).");
-            continue;
+    void BaoThanhCong(const std::string& thongBao) {
+        DatMau(MAU_XANH_LA);
+        std::cout << "  [OK] " << thongBao << "\n";
+        DatMauMacDinh();
+    }
+
+    void BaoThongTin(const std::string& thongBao) {
+        DatMau(MAU_VANG);
+        std::cout << "  [!] " << thongBao << "\n";
+        DatMauMacDinh();
+    }
+
+    //  NHAP LIEU
+    bool NhapChuoi(std::istream& is, const std::string& loiNhac, std::string& ketQua, int doDaiToiDa) {
+        std::string dong;
+        while (DocDong(is, loiNhac, dong)) {
+            if (static_cast<int>(dong.size()) > doDaiToiDa) {
+                BaoLoi("Toi da " + std::to_string(doDaiToiDa) + " ky tu.");
+                continue;
+            }
+            if (dong.find(KY_TU_NGAN_CACH) != std::string::npos) {      // Tranh lam hong file du lieu
+                BaoLoi(std::string("Khong duoc dung ky tu '") + KY_TU_NGAN_CACH + "'.");
+                continue;
+            }
+            ketQua = dong;
+            return true;
         }
-        if (giaTri < giaTriNhoNhat || giaTri > giaTriLonNhat) {
-            BaoLoi("Gia tri phai tu " + SoThucSangChuoi(giaTriNhoNhat)
-                   + " den " + SoThucSangChuoi(giaTriLonNhat) + ".");
-            continue;
+        return false;
+    }
+
+
+    bool NhapChuoiSo(std::istream& is, const std::string& loiNhac, int doDai, std::string& ketQua) {
+        std::string dong;
+        while (DocDong(is, loiNhac, dong)) {
+            if (!ChiGomChuSo(dong) || static_cast<int>(dong.size()) != doDai) {
+                BaoLoi("Phai gom dung " + std::to_string(doDai) + " chu so.");
+                continue;
+            }
+            ketQua = dong;
+            return true;
         }
-        ketQua = giaTri;
-        return true;
+        return false;
     }
-    return false;
-}
 
-// ===========================================================================
-//  DINH DANG
-// ===========================================================================
-
-/**********************************************************
- * @Description Dinh dang tien co dau cham: -1500000 -> -1.500.000
- **********************************************************/
-std::string DinhDangTien(long long soTien) {
-    const bool laSoAm = soTien < 0;
-    const unsigned long long triTuyetDoi = laSoAm
-        ? 0ULL - static_cast<unsigned long long>(soTien)
-        : static_cast<unsigned long long>(soTien);
-    const std::string cacChuSo = std::to_string(triTuyetDoi);
-    const int doDai = static_cast<int>(cacChuSo.size());
-
-    std::string ketQua;
-    for (int i = 0; i < doDai; i++) {
-        ketQua += cacChuSo[i];
-        const int conLai = doDai - 1 - i;
-        if (conLai > 0 && conLai % NHOM_HANG_NGAN == 0) {
-            ketQua += '.';
+    bool NhapSoNguyen(std::istream& is, const std::string& loiNhac, long long& ketQua,
+        long long giaTriNhoNhat, long long giaTriLonNhat) {
+        std::string dong;
+        while (DocDong(is, loiNhac, dong)) {
+            if (!ChiGomChuSo(dong) || static_cast<int>(dong.size()) > SO_CHU_SO_TOI_DA) {
+                BaoLoi("Chi duoc nhap so nguyen khong am (toi da 15 chu so).");
+                continue;
+            }
+            const long long giaTri = std::stoll(dong);
+            if (giaTri < giaTriNhoNhat || giaTri > giaTriLonNhat) {
+                BaoLoi("Gia tri phai tu " + DinhDangTien(giaTriNhoNhat)
+                    + " den " + DinhDangTien(giaTriLonNhat) + ".");
+                continue;
+            }
+            ketQua = giaTri;
+            return true;
         }
+        return false;
     }
-    return laSoAm ? "-" + ketQua : ketQua;
-}
 
-/**********************************************************
- * @Description Dinh dang phan tram 2 chu so thap phan: 6.5 -> 6.50%
- **********************************************************/
-std::string DinhDangPhanTram(double giaTri) {
-    return SoThucSangChuoi(giaTri) + "%";
-}
 
-/**********************************************************
- * @Description Xoa khoang trang o dau va cuoi chuoi
- **********************************************************/
-std::string CatKhoangTrang(const std::string& chuoi) {
-    const std::string khoangTrang = " \t\r\n";
-    const std::string::size_type dau = chuoi.find_first_not_of(khoangTrang);
-    if (dau == std::string::npos) {
-        return "";
+    bool NhapSoThuc(std::istream& is, const std::string& loiNhac, double& ketQua,
+        double giaTriNhoNhat, double giaTriLonNhat) {
+        std::string dong;
+        while (DocDong(is, loiNhac, dong)) {
+            double giaTri = 0.0;
+            if (!DocSoThuc(dong, giaTri)) {
+                BaoLoi("Chi duoc nhap so (vi du 5.5).");
+                continue;
+            }
+            if (giaTri < giaTriNhoNhat || giaTri > giaTriLonNhat) {
+                BaoLoi("Gia tri phai tu " + SoThucSangChuoi(giaTriNhoNhat)
+                    + " den " + SoThucSangChuoi(giaTriLonNhat) + ".");
+                continue;
+            }
+            ketQua = giaTri;
+            return true;
+        }
+        return false;
     }
-    const std::string::size_type cuoi = chuoi.find_last_not_of(khoangTrang);
-    return chuoi.substr(dau, cuoi - dau + 1);
-}
 
-/**********************************************************
- * @Description Doi chuoi sang chu in hoa
- **********************************************************/
-std::string ChuyenInHoa(const std::string& chuoi) {
-    std::string ketQua = chuoi;
-    for (std::string::size_type i = 0; i < ketQua.size(); i++) {
-        ketQua[i] = static_cast<char>(std::toupper(static_cast<unsigned char>(ketQua[i])));
+    //  DINH DANG
+
+    std::string DinhDangTien(long long soTien) {
+        const bool laSoAm = soTien < 0;
+        const unsigned long long triTuyetDoi = laSoAm
+            ? 0ULL - static_cast<unsigned long long>(soTien)
+            : static_cast<unsigned long long>(soTien);
+        const std::string cacChuSo = std::to_string(triTuyetDoi);
+        const int doDai = static_cast<int>(cacChuSo.size());
+
+        std::string ketQua;
+        for (int i = 0; i < doDai; i++) {
+            ketQua += cacChuSo[i];
+            const int conLai = doDai - 1 - i;
+            if (conLai > 0 && conLai % NHOM_HANG_NGAN == 0) {
+                ketQua += '.';
+            }
+        }
+        return laSoAm ? "-" + ketQua : ketQua;
     }
-    return ketQua;
-}
 
-} // namespace TienIch
+
+    std::string DinhDangPhanTram(double giaTri) {
+        return SoThucSangChuoi(giaTri) + "%";
+    }
+
+
+    std::string CatKhoangTrang(const std::string& chuoi) {
+        const std::string khoangTrang = " \t\r\n";
+        const std::string::size_type dau = chuoi.find_first_not_of(khoangTrang);
+        if (dau == std::string::npos) {
+            return "";
+        }
+        const std::string::size_type cuoi = chuoi.find_last_not_of(khoangTrang);
+        return chuoi.substr(dau, cuoi - dau + 1);
+    }
+
+
+    std::string ChuyenInHoa(const std::string& chuoi) {
+        std::string ketQua = chuoi;
+        for (std::string::size_type i = 0; i < ketQua.size(); i++) {
+            ketQua[i] = static_cast<char>(std::toupper(static_cast<unsigned char>(ketQua[i])));
+        }
+        return ketQua;
+    }
+
+}

@@ -1,6 +1,4 @@
-// =====================================================================
-//  TaiKhoanTietKiem.h - Lop con: tai khoan tiet kiem (co lai suat)
-// =====================================================================
+
 #ifndef TAIKHOANTIETKIEM_H_INCLUDED_
 #define TAIKHOANTIETKIEM_H_INCLUDED_
 

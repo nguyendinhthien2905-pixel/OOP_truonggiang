@@ -1,6 +1,3 @@
-// =====================================================================
-//  TaiKhoanThanhToan.h - Lop con: tai khoan thanh toan (co han muc tin dung)
-// =====================================================================
 #ifndef TAIKHOANTHANHTOAN_H_INCLUDED_
 #define TAIKHOANTHANHTOAN_H_INCLUDED_
 

@@ -1,6 +1,3 @@
-// =====================================================================
-//  HangSo.h - Cac hang so dung chung cho toan bo chuong trinh
-// =====================================================================
 #ifndef HANGSO_H_INCLUDED_
 #define HANGSO_H_INCLUDED_
 

@@ -1,11 +1,3 @@
-// =====================================================================
-//  KhoFile.h - Doc / ghi danh sach tai khoan tu file van ban (.txt)
-//
-//  Dinh dang moi dong (ngan cach bang dau '|'):
-//    TIETKIEM|SoTaiKhoan|TenChuTaiKhoan|SoDu|LaiSuat
-//    THANHTOAN|SoTaiKhoan|TenChuTaiKhoan|SoDu|HanMucTinDung
-//  Dong trong va dong bat dau bang '#' (ghi chu) se duoc bo qua.
-// =====================================================================
 #ifndef KHOFILE_H_INCLUDED_
 #define KHOFILE_H_INCLUDED_
 

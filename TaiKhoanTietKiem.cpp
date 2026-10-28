@@ -1,6 +1,4 @@
-// =====================================================================
-//  TaiKhoanTietKiem.cpp - Cai dat lop TaiKhoanTietKiem
-// =====================================================================
+
 #include "TaiKhoanTietKiem.h"
 
 #include <cmath>
@@ -27,9 +25,7 @@ void TaiKhoanTietKiem::DatLaiSuat(double laiSuat) {
     m_LaiSuat = (laiSuat < 0.0) ? 0.0 : laiSuat;
 }
 
-/**********************************************************
- * @Description Tien lai don 1 thang = So du x Lai suat / 100 / 12
- **********************************************************/
+
 long long TaiKhoanTietKiem::TinhTienLaiThang() const {
     if (LaySoDu() <= 0) {
         return 0;
@@ -37,9 +33,7 @@ long long TaiKhoanTietKiem::TinhTienLaiThang() const {
     return static_cast<long long>(std::llround(LaySoDu() * m_LaiSuat / 100.0 / 12.0));
 }
 
-/**********************************************************
- * @Description Tien lai don 1 nam = So du x Lai suat / 100
- **********************************************************/
+
 long long TaiKhoanTietKiem::TinhTienLaiNam() const {
     if (LaySoDu() <= 0) {
         return 0;
@@ -47,11 +41,7 @@ long long TaiKhoanTietKiem::TinhTienLaiNam() const {
     return static_cast<long long>(std::llround(LaySoDu() * m_LaiSuat / 100.0));
 }
 
-/**********************************************************
- * @Description Rut tien tiet kiem. Dieu kien rieng:
- *                - Toi da HAN_MUC_RUT_TIET_KIEM moi lan
- *                - Sau khi rut phai con >= SO_DU_TOI_THIEU_TIET_KIEM
- **********************************************************/
+
 bool TaiKhoanTietKiem::RutTien(long long soTien, std::string& thongBao) {
     if (!KiemTraSoTienRut(soTien, thongBao)) {
         return false;
@@ -75,9 +65,7 @@ bool TaiKhoanTietKiem::RutTien(long long soTien, std::string& thongBao) {
     return true;
 }
 
-/**********************************************************
- * @Description In thong tin chung + lai suat va tien lai du kien
- **********************************************************/
+
 void TaiKhoanTietKiem::HienThiThongTin() const {
     TaiKhoan::HienThiThongTin();
     const long long tienLaiNam = TinhTienLaiNam();
@@ -103,9 +91,7 @@ std::string TaiKhoanTietKiem::LayQuyDinhRut() const {
            + " VND/lan; boi so cua " + TienIch::DinhDangTien(BUOC_TIEN) + " VND.";
 }
 
-/**********************************************************
- * @Description Dong file: TIETKIEM|SoTaiKhoan|Ten|SoDu|LaiSuat
- **********************************************************/
+
 std::string TaiKhoanTietKiem::LayDongFile() const {
     std::ostringstream laiSuat;
     laiSuat << std::setprecision(10) << m_LaiSuat;
@@ -113,9 +99,7 @@ std::string TaiKhoanTietKiem::LayDongFile() const {
            + KY_TU_NGAN_CACH + laiSuat.str();
 }
 
-/**********************************************************
- * @Description Nhap thong tin chung roi nhap lai suat
- **********************************************************/
+
 void TaiKhoanTietKiem::Nhap(std::istream& is) {
     TaiKhoan::Nhap(is);
     if (!is) {

@@ -1,6 +1,3 @@
-// =====================================================================
-//  TaiKhoan.cpp - Cai dat lop co so TaiKhoan
-// =====================================================================
 #include "TaiKhoan.h"
 
 #include <iomanip>
@@ -8,9 +5,7 @@
 #include "HangSo.h"
 #include "TienIch.h"
 
-// ===========================================================================
 //  Constructor / Destructor
-// ===========================================================================
 
 TaiKhoan::TaiKhoan()
     : m_SoDu(0) {
@@ -23,9 +18,7 @@ TaiKhoan::TaiKhoan(const std::string& soTaiKhoan, const std::string& tenChuTaiKh
 TaiKhoan::~TaiKhoan() {
 }
 
-// ===========================================================================
 //  Getter / Setter
-// ===========================================================================
 
 const std::string& TaiKhoan::LaySoTaiKhoan() const {
     return m_SoTaiKhoan;
@@ -51,14 +44,7 @@ void TaiKhoan::DatSoDu(long long soDu) {
     m_SoDu = soDu;
 }
 
-// ===========================================================================
 //  Nghiep vu
-// ===========================================================================
-
-/**********************************************************
- * @Description Nap tien vao tai khoan
- * @return      true neu thanh cong; thongBao luon chua noi dung ket qua
- **********************************************************/
 bool TaiKhoan::NapTien(long long soTien, std::string& thongBao) {
     if (soTien <= 0) {
         thongBao = "So tien nap phai lon hon 0.";
@@ -74,10 +60,7 @@ bool TaiKhoan::NapTien(long long soTien, std::string& thongBao) {
     return true;
 }
 
-/**********************************************************
- * @Description Rang buoc chung cho moi lan rut tai may ATM
- * @return      true neu so tien >= BUOC_TIEN va la boi so cua BUOC_TIEN
- **********************************************************/
+
 bool TaiKhoan::KiemTraSoTienRut(long long soTien, std::string& thongBao) const {
     if (soTien < BUOC_TIEN) {
         thongBao = "So tien rut toi thieu la " + TienIch::DinhDangTien(BUOC_TIEN) + " VND.";
@@ -90,13 +73,6 @@ bool TaiKhoan::KiemTraSoTienRut(long long soTien, std::string& thongBao) const {
     return true;
 }
 
-// ===========================================================================
-//  Phuong thuc ao (mac dinh cua lop co so)
-// ===========================================================================
-
-/**********************************************************
- * @Description Rut tien mac dinh: khong duoc rut qua so du
- **********************************************************/
 bool TaiKhoan::RutTien(long long soTien, std::string& thongBao) {
     if (!KiemTraSoTienRut(soTien, thongBao)) {
         return false;
@@ -110,9 +86,7 @@ bool TaiKhoan::RutTien(long long soTien, std::string& thongBao) {
     return true;
 }
 
-/**********************************************************
- * @Description In cac thong tin chung cua tai khoan
- **********************************************************/
+
 void TaiKhoan::HienThiThongTin() const {
     TienIch::InDong("So tai khoan", m_SoTaiKhoan);
     TienIch::InDong("Chu tai khoan", m_TenChuTaiKhoan);
@@ -134,9 +108,7 @@ std::string TaiKhoan::LayQuyDinhRut() const {
            + TienIch::DinhDangTien(BUOC_TIEN) + " VND.";
 }
 
-/**********************************************************
- * @Description Phan chung cua dong file: SoTaiKhoan|Ten|SoDu
- **********************************************************/
+
 std::string TaiKhoan::LayDongChung() const {
     return m_SoTaiKhoan + KY_TU_NGAN_CACH + m_TenChuTaiKhoan + KY_TU_NGAN_CACH + std::to_string(m_SoDu);
 }
@@ -145,13 +117,7 @@ std::string TaiKhoan::LayDongFile() const {
     return std::string("TAIKHOAN") + KY_TU_NGAN_CACH + LayDongChung();
 }
 
-// ===========================================================================
 //  Nhap / Xuat
-// ===========================================================================
-
-/**********************************************************
- * @Description Nhap thong tin chung. De trong + Enter => huy (set failbit)
- **********************************************************/
 void TaiKhoan::Nhap(std::istream& is) {
     std::string soTaiKhoan;
     std::string ten;
@@ -169,9 +135,7 @@ void TaiKhoan::Nhap(std::istream& is) {
     m_SoDu = soDu;
 }
 
-/**********************************************************
- * @Description In mot dong cua bang: | STK | Ten | Loai | So du | Thong so rieng |
- **********************************************************/
+
 void TaiKhoan::Xuat(std::ostream& os) const {
     const std::ios_base::fmtflags coCu = os.flags();
     os << "| " << std::left << std::setw(DO_RONG_COT_SO_TAI_KHOAN) << m_SoTaiKhoan
@@ -193,9 +157,7 @@ std::ostream& operator<<(std::ostream& os, const TaiKhoan& taiKhoan) {
     return os;
 }
 
-// ===========================================================================
 //  Ke bang
-// ===========================================================================
 
 void TaiKhoan::InDuongKeBang(std::ostream& os) {
     const std::ios_base::fmtflags coCu = os.flags();

@@ -1,6 +1,4 @@
-// =====================================================================
-//  KhoFile.cpp - Cai dat doc / ghi file du lieu tai khoan
-// =====================================================================
+
 #include "KhoFile.h"
 
 #include <cctype>
@@ -184,11 +182,7 @@ namespace KhoFile {
         return true;
     }
 
-    /**********************************************************
-     * @Description Ghi danh sach ra file
-     * @attention   Ghi vao file tam roi doi ten, de khong mat du lieu
-     *              neu bi loi giua chung
-     **********************************************************/
+  
     bool Ghi(const std::string& duongDan,
         const std::vector<std::unique_ptr<TaiKhoan> >& danhSach) {
         const std::string duongDanTam = duongDan + ".tmp";
@@ -209,5 +203,5 @@ namespace KhoFile {
         }
         std::remove(duongDan.c_str());
         return std::rename(duongDanTam.c_str(), duongDan.c_str()) == 0;
-    } // namespace KhoFile
+    } 
 }
