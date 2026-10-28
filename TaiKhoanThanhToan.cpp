@@ -11,7 +11,7 @@ TaiKhoanThanhToan::TaiKhoanThanhToan()
 }
 
 TaiKhoanThanhToan::TaiKhoanThanhToan(const std::string& soTaiKhoan, const std::string& tenChuTaiKhoan,
-                                     long long soDu, long long hanMucTinDung)
+    long long soDu, long long hanMucTinDung)
     : TaiKhoan(soTaiKhoan, tenChuTaiKhoan, soDu), m_HanMucTinDung(hanMucTinDung < 0 ? 0 : hanMucTinDung) {
 }
 
@@ -48,14 +48,14 @@ bool TaiKhoanThanhToan::RutTien(long long soTien, std::string& thongBao) {
     }
     if (soTien > LaySoTienKhaDung()) {
         thongBao = "Vuot han muc tin dung. So tien kha dung toi da: "
-                   + TienIch::DinhDangTien(LaySoTienKhaDung()) + " VND.";
+            + TienIch::DinhDangTien(LaySoTienKhaDung()) + " VND.";
         return false;
     }
     DatSoDu(LaySoDu() - soTien);
     thongBao = "Rut tien thanh cong.";
     if (LaySoDu() < 0) {
         thongBao += " Tai khoan dang ghi no " + TienIch::DinhDangTien(LayDuNo())
-                    + " VND (trong han muc tin dung).";
+            + " VND (trong han muc tin dung).";
     }
     return true;
 }
@@ -67,10 +67,10 @@ void TaiKhoanThanhToan::HienThiThongTin() const {
     TaiKhoan::HienThiThongTin();
     TienIch::InDong("Han muc tin dung", TienIch::DinhDangTien(m_HanMucTinDung) + " VND", MAU_VANG);
     TienIch::InDong("Du no hien tai", TienIch::DinhDangTien(LayDuNo()) + " VND",
-                    LayDuNo() > 0 ? MAU_DO : MAU_XANH_LA);
+        LayDuNo() > 0 ? MAU_DO : MAU_XANH_LA);
     TienIch::InDong("So tien kha dung", TienIch::DinhDangTien(LaySoTienKhaDung()) + " VND", MAU_XANH_LA);
     TienIch::InDong("Trang thai", LayDuNo() > 0 ? "Dang su dung han muc tin dung" : "Binh thuong",
-                    LayDuNo() > 0 ? MAU_DO : MAU_XANH_LA);
+        LayDuNo() > 0 ? MAU_DO : MAU_XANH_LA);
 }
 
 std::string TaiKhoanThanhToan::LayLoaiTaiKhoan() const {
@@ -83,7 +83,7 @@ std::string TaiKhoanThanhToan::LayThongSoRieng() const {
 
 std::string TaiKhoanThanhToan::LayQuyDinhRut() const {
     return "Duoc rut vuot so du trong han muc tin dung (" + TienIch::DinhDangTien(m_HanMucTinDung)
-           + " VND); boi so cua " + TienIch::DinhDangTien(BUOC_TIEN) + " VND.";
+        + " VND).";
 }
 
 /**********************************************************
@@ -91,7 +91,7 @@ std::string TaiKhoanThanhToan::LayQuyDinhRut() const {
  **********************************************************/
 std::string TaiKhoanThanhToan::LayDongFile() const {
     return std::string(LOAI_FILE_THANH_TOAN) + KY_TU_NGAN_CACH + LayDongChung()
-           + KY_TU_NGAN_CACH + std::to_string(m_HanMucTinDung);
+        + KY_TU_NGAN_CACH + std::to_string(m_HanMucTinDung);
 }
 
 /**********************************************************

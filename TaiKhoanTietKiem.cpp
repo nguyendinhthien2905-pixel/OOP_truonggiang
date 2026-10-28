@@ -15,7 +15,7 @@ TaiKhoanTietKiem::TaiKhoanTietKiem()
 }
 
 TaiKhoanTietKiem::TaiKhoanTietKiem(const std::string& soTaiKhoan, const std::string& tenChuTaiKhoan,
-                                   long long soDu, double laiSuat)
+    long long soDu, double laiSuat)
     : TaiKhoan(soTaiKhoan, tenChuTaiKhoan, soDu), m_LaiSuat(laiSuat < 0.0 ? 0.0 : laiSuat) {
 }
 
@@ -58,7 +58,7 @@ bool TaiKhoanTietKiem::RutTien(long long soTien, std::string& thongBao) {
     }
     if (soTien > HAN_MUC_RUT_TIET_KIEM) {
         thongBao = "Tai khoan tiet kiem chi duoc rut toi da "
-                   + TienIch::DinhDangTien(HAN_MUC_RUT_TIET_KIEM) + " VND moi lan.";
+            + TienIch::DinhDangTien(HAN_MUC_RUT_TIET_KIEM) + " VND moi lan.";
         return false;
     }
     if (LaySoDu() - soTien < SO_DU_TOI_THIEU_TIET_KIEM) {
@@ -67,7 +67,7 @@ bool TaiKhoanTietKiem::RutTien(long long soTien, std::string& thongBao) {
             toiDaRutDuoc = 0;
         }
         thongBao = "Phai giu lai toi thieu " + TienIch::DinhDangTien(SO_DU_TOI_THIEU_TIET_KIEM)
-                   + " VND. So tien co the rut toi da: " + TienIch::DinhDangTien(toiDaRutDuoc) + " VND.";
+            + " VND. So tien co the rut toi da: " + TienIch::DinhDangTien(toiDaRutDuoc) + " VND.";
         return false;
     }
     DatSoDu(LaySoDu() - soTien);
@@ -99,8 +99,8 @@ std::string TaiKhoanTietKiem::LayThongSoRieng() const {
 
 std::string TaiKhoanTietKiem::LayQuyDinhRut() const {
     return "Giu lai toi thieu " + TienIch::DinhDangTien(SO_DU_TOI_THIEU_TIET_KIEM)
-           + " VND; toi da " + TienIch::DinhDangTien(HAN_MUC_RUT_TIET_KIEM)
-           + " VND/lan; boi so cua " + TienIch::DinhDangTien(BUOC_TIEN) + " VND.";
+        + " VND; toi da " + TienIch::DinhDangTien(HAN_MUC_RUT_TIET_KIEM)
+        + " VND/lan.";
 }
 
 /**********************************************************
@@ -110,7 +110,7 @@ std::string TaiKhoanTietKiem::LayDongFile() const {
     std::ostringstream laiSuat;
     laiSuat << std::setprecision(10) << m_LaiSuat;
     return std::string(LOAI_FILE_TIET_KIEM) + KY_TU_NGAN_CACH + LayDongChung()
-           + KY_TU_NGAN_CACH + laiSuat.str();
+        + KY_TU_NGAN_CACH + laiSuat.str();
 }
 
 /**********************************************************
@@ -123,8 +123,8 @@ void TaiKhoanTietKiem::Nhap(std::istream& is) {
     }
     double laiSuat = 0.0;
     if (!TienIch::NhapSoThuc(is, "  Lai suat (%/nam, tu " + TienIch::DinhDangPhanTram(LAI_SUAT_TOI_THIEU)
-                                 + " den " + TienIch::DinhDangPhanTram(LAI_SUAT_TOI_DA) + "): ",
-                             laiSuat, LAI_SUAT_TOI_THIEU, LAI_SUAT_TOI_DA)) {
+        + " den " + TienIch::DinhDangPhanTram(LAI_SUAT_TOI_DA) + "): ",
+        laiSuat, LAI_SUAT_TOI_THIEU, LAI_SUAT_TOI_DA)) {
         is.setstate(std::ios::failbit);
         return;
     }

@@ -275,7 +275,7 @@ void MayATM::RutTien() {
     std::cout << "\n";
     taiKhoan->HienThiThongTin();
     std::cout << "\n";
-    TienIch::BaoThongTin("Quy dinh: " + taiKhoan->LayQuyDinhRut());
+
 
     long long soTien = 0;
     if (!TienIch::NhapSoNguyen(std::cin, "  So tien can rut (VND, Enter de huy): ", soTien, 1, SO_DU_TOI_DA)) {

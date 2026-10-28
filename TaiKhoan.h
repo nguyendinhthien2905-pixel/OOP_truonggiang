@@ -19,7 +19,7 @@ protected:
     // Lop con ghi de de nhap them thuoc tinh rieng (goi TaiKhoan::Nhap truoc)
     virtual void Nhap(std::istream& is);
 
-    // Kiem tra rang buoc chung cua moi lan rut: >= 50.000 va la boi so cua 50.000
+    // Kiem tra rang buoc chung cua moi lan rut: so tien phai lon hon 0
     bool KiemTraSoTienRut(long long soTien, std::string& thongBao) const;
 
     // "SoTaiKhoan|Ten|SoDu" - phan chung ma lop con noi them thuoc tinh rieng

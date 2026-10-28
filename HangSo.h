@@ -5,7 +5,6 @@
 #define HANGSO_H_INCLUDED_
 
 // ---------------------------- Hang so nghiep vu ---------------------------
-const long long BUOC_TIEN = 50000;                      // Moi lan rut phai la boi so cua 50.000
 const long long SO_DU_TOI_DA = 999999999999999LL;       // 15 chu so
 const long long SO_DU_TOI_THIEU_TIET_KIEM = 100000;     // Tai khoan tiet kiem phai giu lai
 const long long HAN_MUC_RUT_TIET_KIEM = 20000000;       // Toi da moi lan rut (tiet kiem)
