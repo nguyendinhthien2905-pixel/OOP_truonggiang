@@ -1,6 +1,5 @@
-// =====================================================================
-//  TaiKhoan.h - Lop co so (Base Class) cua he thong tai khoan ngan hang
-// =====================================================================
+//  TaiKhoan.h - Lop co so cua he thong tai khoan ngan hang
+
 #ifndef TAIKHOAN_H_INCLUDED_
 #define TAIKHOAN_H_INCLUDED_
 
@@ -13,19 +12,14 @@ private:
     std::string m_TenChuTaiKhoan;
     long long m_SoDu;
 
-    void Xuat(std::ostream& os) const;      // Mot dong cua bang danh sach
-
-protected:
-    // Lop con ghi de de nhap them thuoc tinh rieng (goi TaiKhoan::Nhap truoc)
+protected:    
     virtual void Nhap(std::istream& is);
 
-    // Kiem tra rang buoc chung cua moi lan rut: so tien phai lon hon 0
     bool KiemTraSoTienRut(long long soTien, std::string& thongBao) const;
-
-    // "SoTaiKhoan|Ten|SoDu" - phan chung ma lop con noi them thuoc tinh rieng
     std::string LayDongChung() const;
 
 public:
+    void Xuat(std::ostream& os) const;
     // ---- Constructor / Destructor ----
     TaiKhoan();
     TaiKhoan(const std::string& soTaiKhoan, const std::string& tenChuTaiKhoan, long long soDu);
@@ -41,10 +35,10 @@ public:
     void DatTenChuTaiKhoan(const std::string& tenChuTaiKhoan);
     void DatSoDu(long long soDu);
 
-    // ---- Nghiep vu ----
+
     bool NapTien(long long soTien, std::string& thongBao);
 
-    // ---- Da hinh: moi loai tai khoan cai dat rieng ----
+    // ---- Da hinh ----
     virtual bool RutTien(long long soTien, std::string& thongBao);
     virtual void HienThiThongTin() const;
     virtual std::string LayLoaiTaiKhoan() const;
