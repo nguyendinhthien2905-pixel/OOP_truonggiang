@@ -162,7 +162,6 @@ std::ostream& operator<<(std::ostream& os, const TaiKhoan& taiKhoan) {
     return os;
 }
 
-// 
 //  Ke bang
 
 void TaiKhoan::InDuongKeBang(std::ostream& os) {

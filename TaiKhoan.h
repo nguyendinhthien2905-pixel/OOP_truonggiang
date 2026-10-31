@@ -12,14 +12,11 @@ private:
     std::string m_TenChuTaiKhoan;
     long long m_SoDu;
 
-protected:    
-    virtual void Nhap(std::istream& is);
-
-    bool KiemTraSoTienRut(long long soTien, std::string& thongBao) const;
-    std::string LayDongChung() const;
 
 public:
-    void Xuat(std::ostream& os) const;
+    virtual void Nhap(std::istream& is);
+
+        void Xuat(std::ostream& os) const;
     // ---- Constructor / Destructor ----
     TaiKhoan();
     TaiKhoan(const std::string& soTaiKhoan, const std::string& tenChuTaiKhoan, long long soDu);
@@ -35,6 +32,10 @@ public:
     void DatTenChuTaiKhoan(const std::string& tenChuTaiKhoan);
     void DatSoDu(long long soDu);
 
+
+
+    bool KiemTraSoTienRut(long long soTien, std::string& thongBao) const;
+    std::string LayDongChung() const;
 
     bool NapTien(long long soTien, std::string& thongBao);
 

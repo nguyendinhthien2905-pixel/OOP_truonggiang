@@ -10,10 +10,10 @@ class TaiKhoanThanhToan : public TaiKhoan {
 private:
     long long m_HanMucTinDung;  // So tien duoc phep rut vuot so du (VND)
 
-protected:
+public:
     void Nhap(std::istream& is) override;
 
-public:
+
     TaiKhoanThanhToan();
     TaiKhoanThanhToan(const std::string& soTaiKhoan, const std::string& tenChuTaiKhoan,
                       long long soDu, long long hanMucTinDung);

@@ -10,10 +10,10 @@ class TaiKhoanTietKiem : public TaiKhoan {
 private:
     double m_LaiSuat;           // Don vi: %/nam
 
-protected:
+public:
     void Nhap(std::istream& is) override;
 
-public:
+
     TaiKhoanTietKiem();
     TaiKhoanTietKiem(const std::string& soTaiKhoan, const std::string& tenChuTaiKhoan,
                      long long soDu, double laiSuat);
