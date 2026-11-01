@@ -21,7 +21,7 @@
   <ItemGroup>
     <ClInclude Include="HangSo.h" />
     <ClInclude Include="KhoFile.h" />
-    <ClInclude Include="MayATM.h" />
+    <ClInclude Include="NganHang.h" />
     <ClInclude Include="TaiKhoan.h" />
     <ClInclude Include="TaiKhoanThanhToan.h" />
     <ClInclude Include="TaiKhoanTietKiem.h" />
@@ -30,7 +30,7 @@
   <ItemGroup>
     <ClCompile Include="KhoFile.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MayATM.cpp" />
+    <ClCompile Include="NganHang.cpp" />
     <ClCompile Include="TaiKhoan.cpp" />
     <ClCompile Include="TaiKhoanThanhToan.cpp" />
     <ClCompile Include="TaiKhoanTietKiem.cpp" />

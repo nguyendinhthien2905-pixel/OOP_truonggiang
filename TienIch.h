@@ -1,11 +1,11 @@
-#ifndef TIENICH_H_INCLUDED_
+﻿#ifndef TIENICH_H_INCLUDED_
 #define TIENICH_H_INCLUDED_
 
 #include <iostream>
 #include <string>
 #include <vector>
 
-//m� m�u
+//mã màu
 enum Mau {
     MAU_DEN = 0,
     MAU_XAM = 7,
@@ -18,7 +18,7 @@ enum Mau {
     MAU_TRANG = 15
 };
 
-//c�c ph�m c� ch?c n?ng thao t�c
+//các phím có chức năng thao tác
 enum Phim {
     PHIM_KHAC,
     PHIM_LEN,
@@ -29,7 +29,7 @@ enum Phim {
 
 namespace TienIch {
 
-    const int KHONG_CHON = -1;      // B?m ph�m ESC ?? tho�t menu
+    const int KHONG_CHON = -1;      // Bấm phím ESC để thoát menu
 
     //console
     void KhoiTaoConsole();
@@ -40,7 +40,7 @@ namespace TienIch {
     void DatViTriCon(int x, int y);
     void HienConTro(bool hien);
 
-    //Ph�m v� Menu
+    //Phím và Menu
     Phim DocPhim();
     void TamDung();
     int ChonMenu(const std::string& tieuDe, const std::vector<std::string>& cacMuc);
@@ -52,13 +52,13 @@ namespace TienIch {
     void BaoThanhCong(const std::string& thongBao);
     void BaoThongTin(const std::string& thongBao);
 
-    //Nh?p li?u (tr? v? false n?u ng??i d�ng ?? tr?ng (h?y) ho?c h?t d? li?u
+    //Nhập liệu (trả về false nếu người dùng để trống (hủy) hoặc hết dữ liệu
     bool NhapChuoi(std::istream& is, const std::string& loiNhac, std::string& ketQua, int doDaiToiDa);
     bool NhapChuoiSo(std::istream& is, const std::string& loiNhac, int doDai, std::string& ketQua);
     bool NhapSoNguyen(std::istream& is, const std::string& loiNhac, long long& ketQua, long long giaTriNhoNhat, long long giaTriLonNhat);
     bool NhapSoThuc(std::istream& is, const std::string& loiNhac, double& ketQua, double giaTriNhoNhat, double giaTriLonNhat);
 
-    //??nh d?ng
+    //Định dạng
     std::string DinhDangTien(long long soTien);
     std::string DinhDangPhanTram(double giaTri);
     std::string ChuyenInHoa(const std::string& chuoi);

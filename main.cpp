@@ -1,10 +1,10 @@
 // ===
-#include "MayATM.h"
+#include "NganHang.h"
 #include "TienIch.h"
 
 int main() {
     TienIch::KhoiTaoConsole();
-    MayATM mayATM;
-    mayATM.Chay();
+    NganHang nganHang;
+    nganHang.Chay();
     return 0;
 }

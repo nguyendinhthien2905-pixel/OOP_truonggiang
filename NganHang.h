@@ -1,8 +1,8 @@
 // =====================================================================
-//  MayATM.h - Lop quan ly danh sach tai khoan va dieu khien menu ATM
+//  NganHang.h - Lop quan ly danh sach tai khoan va dieu khien menu ATM
 // =====================================================================
-#ifndef MAYATM_H_INCLUDED_
-#define MAYATM_H_INCLUDED_
+#ifndef NGANHANG_H_INCLUDED_
+#define NGANHANG_H_INCLUDED_
 
 #include <memory>
 #include <string>
@@ -10,7 +10,7 @@
 
 #include "TaiKhoan.h"
 
-class MayATM {
+class NganHang {
 private:
     // Con tro tren lop co so => chua duoc ca TaiKhoanTietKiem va TaiKhoanThanhToan (da hinh).
     // unique_ptr tu giai phong bo nho, khong can viet destructor.

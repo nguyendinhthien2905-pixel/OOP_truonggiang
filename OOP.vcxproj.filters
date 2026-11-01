@@ -21,7 +21,7 @@
     <ClInclude Include="KhoFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MayATM.h">
+    <ClInclude Include="NganHang.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TaiKhoan.h">
@@ -44,7 +44,7 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MayATM.cpp">
+    <ClCompile Include="NganHang.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TaiKhoan.cpp">
