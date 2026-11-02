@@ -121,27 +121,25 @@ void NganHang::XemDanhSach() const {
 
     long long tongSoDu = 0;
     std::cout << "\n";
-    TienIch::DatMau(MAU_XANH_NGOC);
-    TaiKhoan::InDuongKeBang(std::cout);
+    TaiKhoan::InDuongKeBang(std::cout, 0);
     TaiKhoan::InTieuDeBang(std::cout);
-    TaiKhoan::InDuongKeBang(std::cout);
-    TienIch::DatMauMacDinh();
+    TaiKhoan::InDuongKeBang(std::cout, 1);
 
     for (std::size_t i = 0; i < m_DanhSach.size(); i++) {
         // Phan "| STT " in o day, phan con lai do operator<< cua tai khoan in
-        std::cout << "| " << std::right << std::setw(DO_RONG_COT_STT) << (i + 1) << " "
+        std::cout << "  " << TienIch::KeDoc() << " " << std::right << std::setw(DO_RONG_COT_STT) << (i + 1) << " "
                   << *m_DanhSach[i] << "\n";
         tongSoDu += m_DanhSach[i]->LaySoDu();
     }
 
-    TienIch::DatMau(MAU_XANH_NGOC);
-    TaiKhoan::InDuongKeBang(std::cout);
-    TienIch::DatMauMacDinh();
+    TaiKhoan::InDuongKeBang(std::cout, 2);
 
     std::cout << "\n";
+    TienIch::BatDauBangThongTin();
     TienIch::InDong("Tong so tai khoan", std::to_string(m_DanhSach.size()), MAU_VANG);
     TienIch::InDong("Tong so du", TienIch::DinhDangTien(tongSoDu) + " VND",
                     tongSoDu < 0 ? MAU_DO : MAU_XANH_LA);
+    TienIch::KetThucBangThongTin();
     TienIch::TamDung();
 }
 
@@ -154,7 +152,9 @@ void NganHang::XemChiTiet() const {
     TienIch::XoaManHinh();
     TienIch::InTieuDe("THONG TIN CHI TIET");
     std::cout << "\n";
+    TienIch::BatDauBangThongTin();
     taiKhoan->HienThiThongTin();
+    TienIch::KetThucBangThongTin();
     TienIch::TamDung();
 }
 
@@ -208,7 +208,9 @@ void NganHang::ThemTaiKhoan() {
     std::cout << "\n";
     TienIch::BaoThanhCong("Them tai khoan thanh cong.");
     std::cout << "\n";
+    TienIch::BatDauBangThongTin();
     m_DanhSach.back()->HienThiThongTin();
+    TienIch::KetThucBangThongTin();
     TienIch::TamDung();
 }
 
@@ -221,7 +223,9 @@ void NganHang::NapTien() {
     TienIch::XoaManHinh();
     TienIch::InTieuDe("NAP TIEN");
     std::cout << "\n";
+    TienIch::BatDauBangThongTin();
     taiKhoan->HienThiThongTin();
+    TienIch::KetThucBangThongTin();
     std::cout << "\n";
 
     long long soTien = 0;
@@ -253,7 +257,9 @@ void NganHang::RutTien() {
     TienIch::XoaManHinh();
     TienIch::InTieuDe("RUT TIEN");
     std::cout << "\n";
+    TienIch::BatDauBangThongTin();
     taiKhoan->HienThiThongTin();
+    TienIch::KetThucBangThongTin();
     std::cout << "\n";
 
 
@@ -317,7 +323,7 @@ void NganHang::Chay() {
     }
 
     TienIch::XoaManHinh();
-    TienIch::DatMau(MAU_XANH_NGOC);
+    TienIch::DatMau(MAU_CHU_DAO);
     std::cout << "\n  Cam on ban da su dung dich vu ATM. Tam biet!\n\n";
     TienIch::DatMauMacDinh();
 }

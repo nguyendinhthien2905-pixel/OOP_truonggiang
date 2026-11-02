@@ -48,7 +48,7 @@ public:
     virtual std::string LayDongFile() const;        // Mot dong ghi ra file TaiKhoan.txt
 
     // ---- Ke bang danh sach (dung chung do rong cot voi operator<<) ----
-    static void InDuongKeBang(std::ostream& os);
+    static void InDuongKeBang(std::ostream& os, int loai = 1);   // loai: 0 trên, 1 giữa, 2 dưới
     static void InTieuDeBang(std::ostream& os);
 
     // ---- Qua tai toan tu nhap / xuat ----

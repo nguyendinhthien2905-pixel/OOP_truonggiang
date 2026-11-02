@@ -21,6 +21,7 @@ namespace {
     const int DO_RONG_MUC_MENU = 56;        // độ rộng 1 dòng menu
     const int SO_MUC_HIEN_THI_TOI_DA = 10;  // số lượng mục menu tối đa, dài hơn sẽ tự cuộn
     const int DO_RONG_NHAN = 28;            // độ rộng của cột nhãn
+    const int DO_RONG_GIA_TRI = 34;         // độ rộng của cột giá trị trong bảng thông tin
     const int SO_CHU_SO_TOI_DA = 15;        // số chữ số tối đa cho phép khi nhập
     const int NHOM_HANG_NGAN = 3;           // cách khoảng hàng nghìn, triệu,...
 
@@ -35,6 +36,72 @@ namespace {
     const int MA_MUI_TEN_XUONG = 80;        // mã mũi tên xuống
 
     WORD g_mauMacDinh = 7;                  // thuộc tính màu lúc vào màn hình console
+    bool g_coMau24Bit = false;              // console có hỗ trợ mã ANSI (màu 24-bit) hay không
+    bool g_trongBangThongTin = false;       // InDong đang in vào bảng thông tin 2 cột hay không
+
+    //các ký tự khung viền (viết dạng byte UTF-8 để không phụ thuộc bảng mã khi biên dịch)
+    const char* const KHUNG_TREN_TRAI = "\xE2\x95\xAD";    // ╭
+    const char* const KHUNG_TREN_PHAI = "\xE2\x95\xAE";    // ╮
+    const char* const KHUNG_DUOI_TRAI = "\xE2\x95\xB0";    // ╰
+    const char* const KHUNG_DUOI_PHAI = "\xE2\x95\xAF";    // ╯
+    const char* const KHUNG_NGANG = "\xE2\x94\x80";        // ─
+    const char* const KHUNG_DOC = "\xE2\x94\x82";          // │
+    const char* const MUI_TEN_CHON = "\xE2\x96\xBA";       // ►
+
+    //chữ "ATM BANK" kiểu khối. Ký hiệu tạm: # = █, [ = ╔, ] = ╗, { = ╚, } = ╝, - = ═, | = ║
+    const char* const BANNER[] = {
+        " #####] ########] ###]   ###]    ######]  #####] ###]   ##] ##]  ##]",
+        "##[--##]{--##[--} ####] ####|    ##[--##]##[--##]####]  ##| ##| ##[}",
+        "#######|   ##|    ##[####[##|    ######[}#######|##[##] ##| #####[} ",
+        "##[--##|   ##|    ##|{##[}##|    ##[--##]##[--##|##|{##]##| ##[-##] ",
+        "##|  ##|   ##|    ##| {-} ##|    ######[}##|  ##|##| {####| ##|  ##]",
+        "{-}  {-}   {-}    {-}     {-}    {-----} {-}  {-}{-}  {---} {-}  {-}"
+    };
+    const int SO_DONG_BANNER = 6;
+
+    //đổi ký hiệu tạm trong BANNER thành ký tự khối thật
+    const char* KyTuBanner(char c) {
+        switch (c) {
+        case '#': return "\xE2\x96\x88";
+        case '[': return "\xE2\x95\x94";
+        case ']': return "\xE2\x95\x97";
+        case '{': return "\xE2\x95\x9A";
+        case '}': return "\xE2\x95\x9D";
+        case '-': return "\xE2\x95\x90";
+        case '|': return "\xE2\x95\x91";
+        default:  return " ";
+        }
+    }
+
+    //bảng màu RGB tương ứng với từng mã màu
+    void LayRGB(Mau mau, int& r, int& g, int& b) {
+        switch (mau) {
+        case MAU_DEN:        r = 24;  g = 24;  b = 24;  break;
+        case MAU_XAM:        r = 140; g = 140; b = 140; break;
+        case MAU_CHU_DAO:    r = 236; g = 128; b = 62;  break;   // #ec803e (cam sáng)
+        case MAU_XANH_DUONG: r = 97;  g = 175; b = 239; break;
+        case MAU_XANH_LA:    r = 152; g = 195; b = 121; break;
+        case MAU_DO:         r = 224; g = 108; b = 117; break;
+        case MAU_TIM:        r = 198; g = 120; b = 221; break;
+        case MAU_VANG:       r = 229; g = 192; b = 123; break;
+        default:             r = 230; g = 230; b = 230; break;
+        }
+    }
+
+    //sinh mã ANSI màu chữ (loai = 38) hoặc màu nền (loai = 48)
+    std::string MaANSI(int loai, int r, int g, int b) {
+        return "\x1b[" + std::to_string(loai) + ";2;" + std::to_string(r) + ";"
+            + std::to_string(g) + ";" + std::to_string(b) + "m";
+    }
+
+    //in một dòng khung bo góc: ╭──────╮ hoặc ╰──────╯
+    void InVienNgang(const char* trai, const char* phai, int doRong) {
+        std::cout << "  " << trai;
+        for (int i = 0; i < doRong - 2; i++) {
+            std::cout << KHUNG_NGANG;
+        }
+        std::cout << phai << "\n";
+    }
 
 
     //thiết lập menu tương tác (không có thì chỉ là console bình thường)
@@ -138,10 +205,10 @@ namespace {
         std::cout << std::left;
         TienIch::DatMau(MAU_XAM);
         std::cout << std::setw(DO_RONG_KHUNG)
-            << "  [Len/Xuong] Di chuyen    [Enter] Chon    [Esc] Quay lai" << "\n";
+            << "  Len/Xuong: di chuyen  -  Enter: chon  -  Esc: quay lai" << "\n";
         std::cout << std::setw(DO_RONG_KHUNG) << "" << "\n";
 
-        TienIch::DatMau(MAU_XANH_NGOC);
+        TienIch::DatMau(MAU_CHU_DAO);
         //kiểm tra danh sách có bị cuộc xuống dưới hay không, nếu có in ra kí tự ^... để người dùng biết
         std::cout << std::setw(DO_RONG_MUC_MENU) << (dau > 0 ? "        ^ ..." : "") << "\n";
 
@@ -154,8 +221,8 @@ namespace {
             //xử lí vị trí đang chọn: đổi màu nền xanh ngọc, màu chữ đen và hiển thị >> trước nội dung đang chọn
             if (i == viTri) {
                 std::cout << "  ";
-                TienIch::DatMauNen(MAU_DEN, MAU_XANH_NGOC);
-                std::cout << std::setw(DO_RONG_MUC_MENU - 2) << (" >> " + noiDung);
+                TienIch::DatMauNen(MAU_TRANG, MAU_CHU_DAO);
+                std::cout << " " << MUI_TEN_CHON << std::setw(DO_RONG_MUC_MENU - 4) << (" " + noiDung);
                 TienIch::DatMauMacDinh();
             }
             //xử lí vị trí không đang được chọn: màu chữ trắng, thụt lề bình thường
@@ -167,7 +234,7 @@ namespace {
             std::cout << "\n";
         }
 
-        TienIch::DatMau(MAU_XANH_NGOC);
+        TienIch::DatMau(MAU_CHU_DAO);
         //báo hiệu cuộn xuống v.. khi còn các mục phía dưới
         std::cout << std::setw(DO_RONG_MUC_MENU) << (dau + soDong < soMuc ? "        v ..." : "") << "\n";
         TienIch::DatMauMacDinh();
@@ -181,11 +248,16 @@ namespace TienIch {
 
     //khởi tạo màn hình console
     void KhoiTaoConsole() {
-        std::system("mode con: cols=110 lines=36");                     //thiết đặt kích thước màn hình console: 110 cột và 36 dòng
+        std::system("mode con: cols=120 lines=36");                     //thiết đặt kích thước màn hình console: 120 cột và 36 dòng
         SetConsoleTitleA("QUAN LY TAI KHOAN NGAN HANG - MAY ATM");      //thiết đặt tiêu đề cho màn hình console
         CONSOLE_SCREEN_BUFFER_INFO thongTin;                            //thiết đặt màu săc mặc định cho hệ thống
         if (GetConsoleScreenBufferInfo(LayManHinh(), &thongTin)) {
             g_mauMacDinh = thongTin.wAttributes;
+        }
+        SetConsoleOutputCP(CP_UTF8);                                    //in được ký tự khung viền, chữ khối
+        DWORD cheDo = 0;                                                //bật mã ANSI để dùng màu 24-bit (#b4532a)
+        if (GetConsoleMode(LayManHinh(), &cheDo)) {
+            g_coMau24Bit = SetConsoleMode(LayManHinh(), cheDo | ENABLE_VIRTUAL_TERMINAL_PROCESSING) != 0;
         }
     }
 
@@ -193,6 +265,12 @@ namespace TienIch {
     //thay đổi màu sắc chữ mà không thay đổi màu nền trên cửa sổ console
     void DatMau(Mau mauChu) {
         std::cout.flush();
+        if (g_coMau24Bit) {
+            int r, g, b;
+            LayRGB(mauChu, r, g, b);
+            std::cout << "\x1b[0m" << MaANSI(38, r, g, b);
+            return;
+        }
         //thay đổi thuộc tính hiển thị (màu chữ, màu nền)
         SetConsoleTextAttribute(LayManHinh(), static_cast<WORD>(mauChu | (g_mauMacDinh & 0xF0)));
     }
@@ -200,11 +278,22 @@ namespace TienIch {
     //thiết lập màu chữ và màu nền trong màn hình console
     void DatMauNen(Mau mauChu, Mau mauNen) {
         std::cout.flush();
+        if (g_coMau24Bit) {
+            int r, g, b;
+            LayRGB(mauChu, r, g, b);
+            std::cout << MaANSI(38, r, g, b);
+            LayRGB(mauNen, r, g, b);
+            std::cout << MaANSI(48, r, g, b);
+            return;
+        }
         SetConsoleTextAttribute(LayManHinh(), static_cast<WORD>(mauChu | (mauNen << 4)));
     }
 
     //thiết đặt lại màu gốc của màn hình console: đen (0), trắng (7)
     void DatMauMacDinh() {
+        if (g_coMau24Bit) {
+            std::cout << "\x1b[0m";
+        }
         std::cout.flush();
         SetConsoleTextAttribute(LayManHinh(), g_mauMacDinh);
     }
@@ -352,8 +441,6 @@ namespace TienIch {
 
     //vẽ một khung tiêu đề có đườnng viền bao quanh, canh giữa dòng tiêu đề trên màn hình console
     void InTieuDe(const std::string& tieuDe) {
-        const std::string vien = "+" + std::string(DO_RONG_KHUNG - 2, '=') + "+";       //vẽ viền ngang trên và dưới có dạng +==========+
-
         //phép tính để căn lề giữa
         int khoangTrong = DO_RONG_KHUNG - 2 - static_cast<int>(tieuDe.size());
         if (khoangTrong < 0) {
@@ -363,23 +450,61 @@ namespace TienIch {
         const int leTrai = khoangTrong / 2;
         const int lePhai = khoangTrong - leTrai;
 
-        //tô màu v in ra màn hình
-        DatMau(MAU_XANH_NGOC);
-        std::cout << vien << "\n|";                                                     //kí tự | bên trái màu xanh ngọc
+        //chữ khối "ATM BANK", màu chuyển dần từ vàng (#f7c948) sang cam (#ec803e) theo từng cột
+        std::cout << "\n";
+        for (int dong = 0; dong < SO_DONG_BANNER; dong++) {
+            const std::string hang = BANNER[dong];
+            const int doRong = static_cast<int>(hang.size());
+            std::cout << "  ";
+            for (int cot = 0; cot < doRong; cot++) {
+                if (g_coMau24Bit) {
+                    const int r = 247 + (236 - 247) * cot / doRong;
+                    const int g = 201 + (128 - 201) * cot / doRong;
+                    const int b = 72 + (62 - 72) * cot / doRong;
+                    std::cout << MaANSI(38, r, g, b);
+                }
+                else if (cot == 0) {
+                    DatMau(MAU_CHU_DAO);
+                }
+                std::cout << KyTuBanner(hang[cot]);
+            }
+            DatMauMacDinh();
+            std::cout << "\n";
+        }
 
-        DatMau(MAU_VANG);
-        std::cout << std::string(leTrai, ' ') << tieuDe << std::string(lePhai, ' ');    //tiêu đề ở giữa mà vàng
+        DatMau(MAU_XAM);
+        std::cout << "  Quan ly tai khoan ngan hang - May ATM\n\n";
 
-        DatMau(MAU_XANH_NGOC);
-        std::cout << "|\n" << vien << "\n";                                             //kí tự | bên phải màu xanh ngọc
+        //khung bo góc chứa tiêu đề màn hình hiện tại
+        DatMau(MAU_CHU_DAO);
+        InVienNgang(KHUNG_TREN_TRAI, KHUNG_TREN_PHAI, DO_RONG_KHUNG);
+        std::cout << "  " << KHUNG_DOC;
+        DatMau(MAU_TRANG);
+        std::cout << std::string(leTrai, ' ') << tieuDe << std::string(lePhai, ' ');    //tiêu đề ở giữa màu trắng
+        DatMau(MAU_CHU_DAO);
+        std::cout << KHUNG_DOC << "\n";
+        InVienNgang(KHUNG_DUOI_TRAI, KHUNG_DUOI_PHAI, DO_RONG_KHUNG);
 
         DatMauMacDinh();
     }
 
     //in một dòng thông tin dạng: THÔNG_TIN: GIÁ_TRỊ, được căn lề trái, thông tin được tô màu xanh ngọc, giá trị được tô màu tùy ý
+    //nếu đang ở trong bảng thông tin (BatDauBangThongTin) thì in thành một hàng của bảng 2 cột
     void InDong(const std::string& nhan, const std::string& giaTri, Mau mauGiaTri) {
         BaoVeDinhDang baoVe(std::cout);
-        DatMau(MAU_XANH_NGOC);
+        if (g_trongBangThongTin) {
+            std::cout << "  " << KeDoc() << " ";
+            DatMau(MAU_CHU_DAO);
+            std::cout << std::left << std::setw(DO_RONG_NHAN) << nhan;
+            DatMauMacDinh();
+            std::cout << " " << KeDoc() << " ";
+            DatMau(mauGiaTri);
+            std::cout << std::setw(DO_RONG_GIA_TRI) << giaTri;
+            DatMauMacDinh();
+            std::cout << " " << KeDoc() << "\n";
+            return;
+        }
+        DatMau(MAU_CHU_DAO);
         std::cout << "  " << std::left << std::setw(DO_RONG_NHAN) << nhan << ": ";
         DatMau(mauGiaTri);
         std::cout << giaTri;
@@ -387,24 +512,74 @@ namespace TienIch {
         std::cout << "\n";
     }
 
+    //ký tự kẻ dọc │ của bảng, tô màu chủ đạo
+    std::string KeDoc() {
+        if (!g_coMau24Bit) {
+            return KHUNG_DOC;
+        }
+        int r, g, b;
+        LayRGB(MAU_CHU_DAO, r, g, b);
+        return MaANSI(38, r, g, b) + KHUNG_DOC + "\x1b[0m";
+    }
+
+    //kẻ một đường ngang của bảng theo độ rộng từng cột: loai 0 = trên ┌┬┐, 1 = giữa ├┼┤, 2 = dưới └┴┘
+    void InKeNgangBang(const std::vector<int>& doRongCot, int loai) {
+        const char* const TRAI[] = { "\xE2\x94\x8C", "\xE2\x94\x9C", "\xE2\x94\x94" };
+        const char* const GIUA[] = { "\xE2\x94\xAC", "\xE2\x94\xBC", "\xE2\x94\xB4" };
+        const char* const PHAI[] = { "\xE2\x94\x90", "\xE2\x94\xA4", "\xE2\x94\x98" };
+
+        DatMau(MAU_CHU_DAO);
+        std::cout << "  " << TRAI[loai];
+        for (std::vector<int>::size_type i = 0; i < doRongCot.size(); i++) {
+            for (int j = 0; j < doRongCot[i] + 2; j++) {   // +2: khoảng trắng hai bên ô
+                std::cout << KHUNG_NGANG;
+            }
+            std::cout << (i + 1 < doRongCot.size() ? GIUA[loai] : PHAI[loai]);
+        }
+        DatMauMacDinh();
+        std::cout << "\n";
+    }
+
+    //mở bảng thông tin 2 cột: các lệnh InDong sau đó sẽ in thành hàng của bảng
+    void BatDauBangThongTin() {
+        std::vector<int> cot;
+        cot.push_back(DO_RONG_NHAN);
+        cot.push_back(DO_RONG_GIA_TRI);
+        InKeNgangBang(cot, 0);
+        BaoVeDinhDang baoVe(std::cout);
+        std::cout << std::left << "  " << KeDoc() << " " << std::setw(DO_RONG_NHAN) << "Thong tin"
+            << " " << KeDoc() << " " << std::setw(DO_RONG_GIA_TRI) << "Gia tri" << " " << KeDoc() << "\n";
+        InKeNgangBang(cot, 1);
+        g_trongBangThongTin = true;
+    }
+
+    //đóng bảng thông tin 2 cột
+    void KetThucBangThongTin() {
+        std::vector<int> cot;
+        cot.push_back(DO_RONG_NHAN);
+        cot.push_back(DO_RONG_GIA_TRI);
+        InKeNgangBang(cot, 2);
+        g_trongBangThongTin = false;
+    }
+
     //in ra dòng báo lỗi
     void BaoLoi(const std::string& thongBao) {
         DatMau(MAU_DO);
-        std::cout << "  [LOI] " << thongBao << "\n";
+        std::cout << "  \xE2\x9C\x96 " << thongBao << "\n";
         DatMauMacDinh();
     }
 
     //in ra dòng báo thành công
     void BaoThanhCong(const std::string& thongBao) {
         DatMau(MAU_XANH_LA);
-        std::cout << "  [OK] " << thongBao << "\n";
+        std::cout << "  \xE2\x9C\x94 " << thongBao << "\n";
         DatMauMacDinh();
     }
 
     //in ra dòng báo thông tin (lưu ý, cảnh báo, thông tin chung,...)
     void BaoThongTin(const std::string& thongBao) {
         DatMau(MAU_VANG);
-        std::cout << "  [!] " << thongBao << "\n";
+        std::cout << "  \xE2\x97\x8F " << thongBao << "\n";
         DatMauMacDinh();
     }
 

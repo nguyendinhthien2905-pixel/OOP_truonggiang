@@ -11,7 +11,7 @@ enum Mau {
     MAU_XAM = 7,
     MAU_XANH_DUONG = 9,
     MAU_XANH_LA = 10,
-    MAU_XANH_NGOC = 11,
+    MAU_CHU_DAO = 6,        // màu chủ đạo cam #ec803e (khi console không hỗ trợ màu 24-bit thì dùng màu vàng đậm gần nhất)
     MAU_DO = 12,
     MAU_TIM = 13,
     MAU_VANG = 14,
@@ -48,6 +48,11 @@ namespace TienIch {
     //In
     void InTieuDe(const std::string& tieuDe);
     void InDong(const std::string& nhan, const std::string& giaTri, Mau mauGiaTri = MAU_TRANG);
+    //Bảng
+    std::string KeDoc();
+    void InKeNgangBang(const std::vector<int>& doRongCot, int loai);   // loai: 0 trên, 1 giữa, 2 dưới
+    void BatDauBangThongTin();
+    void KetThucBangThongTin();
     void BaoLoi(const std::string& thongBao);
     void BaoThanhCong(const std::string& thongBao);
     void BaoThongTin(const std::string& thongBao);

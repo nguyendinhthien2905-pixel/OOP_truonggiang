@@ -143,12 +143,13 @@ void TaiKhoan::Nhap(std::istream& is) {
 
 void TaiKhoan::Xuat(std::ostream& os) const {
     const std::ios_base::fmtflags coCu = os.flags();
-    os << "| " << std::left << std::setw(DO_RONG_COT_SO_TAI_KHOAN) << m_SoTaiKhoan
-        << " | " << std::setw(DO_RONG_COT_TEN) << m_TenChuTaiKhoan
-        << " | " << std::setw(DO_RONG_COT_LOAI) << LayLoaiTaiKhoan()
-        << " | " << std::right << std::setw(DO_RONG_COT_SO_DU) << TienIch::DinhDangTien(m_SoDu)
-        << " | " << std::left << std::setw(DO_RONG_COT_THONG_SO) << LayThongSoRieng()
-        << " |";
+    const std::string ke = " " + TienIch::KeDoc() + " ";
+    os << TienIch::KeDoc() << " " << std::left << std::setw(DO_RONG_COT_SO_TAI_KHOAN) << m_SoTaiKhoan
+        << ke << std::setw(DO_RONG_COT_TEN) << m_TenChuTaiKhoan
+        << ke << std::setw(DO_RONG_COT_LOAI) << LayLoaiTaiKhoan()
+        << ke << std::right << std::setw(DO_RONG_COT_SO_DU) << TienIch::DinhDangTien(m_SoDu)
+        << ke << std::left << std::setw(DO_RONG_COT_THONG_SO) << LayThongSoRieng()
+        << " " << TienIch::KeDoc();
     os.flags(coCu);
 }
 
@@ -164,29 +165,28 @@ std::ostream& operator<<(std::ostream& os, const TaiKhoan& taiKhoan) {
 
 //  Ke bang
 
-void TaiKhoan::InDuongKeBang(std::ostream& os) {
-    const std::ios_base::fmtflags coCu = os.flags();
-    const char kyTuCu = os.fill('-');
-    os << '+' << std::setw(DO_RONG_COT_STT + 2) << ""
-        << '+' << std::setw(DO_RONG_COT_SO_TAI_KHOAN + 2) << ""
-        << '+' << std::setw(DO_RONG_COT_TEN + 2) << ""
-        << '+' << std::setw(DO_RONG_COT_LOAI + 2) << ""
-        << '+' << std::setw(DO_RONG_COT_SO_DU + 2) << ""
-        << '+' << std::setw(DO_RONG_COT_THONG_SO + 2) << ""
-        << "+\n";
-    os.fill(kyTuCu);
-    os.flags(coCu);
+void TaiKhoan::InDuongKeBang(std::ostream& os, int loai) {
+    os.flush();
+    std::vector<int> cot;
+    cot.push_back(DO_RONG_COT_STT);
+    cot.push_back(DO_RONG_COT_SO_TAI_KHOAN);
+    cot.push_back(DO_RONG_COT_TEN);
+    cot.push_back(DO_RONG_COT_LOAI);
+    cot.push_back(DO_RONG_COT_SO_DU);
+    cot.push_back(DO_RONG_COT_THONG_SO);
+    TienIch::InKeNgangBang(cot, loai);
 }
 
 void TaiKhoan::InTieuDeBang(std::ostream& os) {
     const std::ios_base::fmtflags coCu = os.flags();
+    const std::string ke = " " + TienIch::KeDoc() + " ";
     os << std::left
-        << "| " << std::setw(DO_RONG_COT_STT) << "STT"
-        << " | " << std::setw(DO_RONG_COT_SO_TAI_KHOAN) << "So tai khoan"
-        << " | " << std::setw(DO_RONG_COT_TEN) << "Chu tai khoan"
-        << " | " << std::setw(DO_RONG_COT_LOAI) << "Loai"
-        << " | " << std::setw(DO_RONG_COT_SO_DU) << "So du (VND)"
-        << " | " << std::setw(DO_RONG_COT_THONG_SO) << "Thong so rieng"
-        << " |\n";
+        << "  " << TienIch::KeDoc() << " " << std::setw(DO_RONG_COT_STT) << "STT"
+        << ke << std::setw(DO_RONG_COT_SO_TAI_KHOAN) << "So tai khoan"
+        << ke << std::setw(DO_RONG_COT_TEN) << "Chu tai khoan"
+        << ke << std::setw(DO_RONG_COT_LOAI) << "Loai"
+        << ke << std::right << std::setw(DO_RONG_COT_SO_DU) << "So du (VND)"
+        << ke << std::left << std::setw(DO_RONG_COT_THONG_SO) << "Thong so rieng"
+        << " " << TienIch::KeDoc() << "\n";
     os.flags(coCu);
 }
