@@ -1,6 +1,4 @@
-// =====================================================================
 //  NganHang.cpp - Menu chinh va cac chuc nang cua may ATM
-// =====================================================================
 #include "NganHang.h"
 
 #include <iomanip>
@@ -33,11 +31,9 @@ enum LuaChonLoaiTaiKhoan {
 } // namespace
 
 
-/**********************************************************
- * @Description Nap danh sach tai khoan tu file TaiKhoan.txt
- * @attention   - Chua co file: tao file voi du lieu mau
- *              - Dong sai trong file: bao loi va bo qua dong do
- **********************************************************/
+/*@Description Nap danh sach tai khoan tu file TaiKhoan.txt
+           - Dong sai trong file: bao loi va bo qua dong do
+*/
 void NganHang::TaiDuLieu() {
     std::vector<std::string> cacLoi;
     if (!KhoFile::Doc(TEN_FILE_DU_LIEU, m_DanhSach, cacLoi)) {
@@ -66,19 +62,15 @@ void NganHang::TaiDuLieu() {
     }
 }
 
-/**********************************************************
- * @Description Ghi danh sach hien tai ra file
- **********************************************************/
+//Ghi danh sach hien tai ra file
 void NganHang::LuuFile() const {
     if (!KhoFile::Ghi(TEN_FILE_DU_LIEU, m_DanhSach)) {
         TienIch::BaoLoi(std::string("Khong the ghi du lieu ra file ") + TEN_FILE_DU_LIEU + ".");
     }
 }
 
-/**********************************************************
- * @Description Tim tai khoan theo so tai khoan
- * @return      Con tro toi tai khoan, nullptr neu khong co
- **********************************************************/
+// Tim tai khoan theo so tai khoann
+// Con tro toi tai khoan, nullptr neu khong co
 TaiKhoan* NganHang::TimTaiKhoan(const std::string& soTaiKhoan) const {
     for (std::size_t i = 0; i < m_DanhSach.size(); i++) {
         if (m_DanhSach[i]->LaySoTaiKhoan() == soTaiKhoan) {
@@ -88,10 +80,8 @@ TaiKhoan* NganHang::TimTaiKhoan(const std::string& soTaiKhoan) const {
     return nullptr;
 }
 
-/**********************************************************
- * @Description Hien menu mui ten liet ke tai khoan de nguoi dung chon
- * @return      Con tro toi tai khoan da chon, nullptr neu quay lai / khong co
- **********************************************************/
+// Hien menu mui ten liet ke tai khoan de nguoi dung chon
+//Con tro toi tai khoan da chon, nullptr neu quay lai / khong co
 TaiKhoan* NganHang::ChonTaiKhoan(const std::string& tieuDe) const {
     if (m_DanhSach.empty()) {
         TienIch::XoaManHinh();
@@ -119,9 +109,7 @@ TaiKhoan* NganHang::ChonTaiKhoan(const std::string& tieuDe) const {
     return m_DanhSach[viTri].get();
 }
 
-/**********************************************************
- * @Description In bang danh sach tat ca tai khoan
- **********************************************************/
+//In bang danh sach tat ca tai khoan
 void NganHang::XemDanhSach() const {
     TienIch::XoaManHinh();
     TienIch::InTieuDe("DANH SACH TAI KHOAN");
@@ -157,9 +145,7 @@ void NganHang::XemDanhSach() const {
     TienIch::TamDung();
 }
 
-/**********************************************************
- * @Description Xem chi tiet mot tai khoan (goi HienThiThongTin da hinh)
- **********************************************************/
+//n Xem chi tiet mot tai khoan (goi HienThiThongTin da hinh)
 void NganHang::XemChiTiet() const {
     TaiKhoan* taiKhoan = ChonTaiKhoan("XEM THONG TIN CHI TIET");
     if (taiKhoan == nullptr) {
@@ -172,9 +158,7 @@ void NganHang::XemChiTiet() const {
     TienIch::TamDung();
 }
 
-/**********************************************************
- * @Description Them tai khoan moi: chon loai, nhap bang operator>>
- **********************************************************/
+// Them tai khoan moi: chon loai, nhap bang operator>>
 void NganHang::ThemTaiKhoan() {
     std::vector<std::string> cacLoai;
     cacLoai.push_back("Tai khoan tiet kiem");
@@ -228,9 +212,7 @@ void NganHang::ThemTaiKhoan() {
     TienIch::TamDung();
 }
 
-/**********************************************************
- * @Description Nap tien vao tai khoan da chon
- **********************************************************/
+// Nap tien vao tai khoan da chon
 void NganHang::NapTien() {
     TaiKhoan* taiKhoan = ChonTaiKhoan("NAP TIEN - CHON TAI KHOAN");
     if (taiKhoan == nullptr) {
@@ -262,9 +244,7 @@ void NganHang::NapTien() {
     TienIch::TamDung();
 }
 
-/**********************************************************
- * @Description Rut tien tu tai khoan da chon (da hinh: RutTien cua tung loai)
- **********************************************************/
+// Rut tien tu tai khoan da chon (da hinh: RutTien cua tung loai)
 void NganHang::RutTien() {
     TaiKhoan* taiKhoan = ChonTaiKhoan("RUT TIEN - CHON TAI KHOAN");
     if (taiKhoan == nullptr) {
@@ -298,9 +278,7 @@ void NganHang::RutTien() {
     TienIch::TamDung();
 }
 
-/**********************************************************
- * @Description Vong lap menu chinh, ket thuc khi chon "Thoat"
- **********************************************************/
+// Vong lap menu chinh, ket thuc khi chon "Thoat"
 void NganHang::Chay() {
     TaiDuLieu();
 
