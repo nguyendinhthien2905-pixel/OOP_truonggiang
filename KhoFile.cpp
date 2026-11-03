@@ -1,4 +1,4 @@
-// =====================================================================
+﻿// =====================================================================
 //  KhoFile.cpp - Cai dat doc / ghi file du lieu tai khoan
 // =====================================================================
 #include "KhoFile.h"
@@ -81,13 +81,13 @@ bool DocSoThuc(const std::string& chuoi, double& ketQua) {
 // Kiem tra cac truong chung. Tra ve chuoi rong neu hop le, nguoc lai la ly do loi
 std::string KiemTraTruongChung(const std::vector<std::string>& truong, long long& soDu) {
     if (!ChiGomChuSo(truong[1]) || static_cast<int>(truong[1].size()) != DO_DAI_SO_TAI_KHOAN) {
-        return "so tai khoan phai gom " + std::to_string(DO_DAI_SO_TAI_KHOAN) + " chu so";
+        return "số tài khoản phải gồm " + std::to_string(DO_DAI_SO_TAI_KHOAN) + " chữ số";
     }
     if (truong[2].empty() || static_cast<int>(truong[2].size()) > DO_DAI_TEN_TOI_DA) {
-        return "ten chu tai khoan rong hoac dai qua " + std::to_string(DO_DAI_TEN_TOI_DA) + " ky tu";
+        return "tên chủ tài khoản rỗng hoặc dài quá " + std::to_string(DO_DAI_TEN_TOI_DA) + " ký tự";
     }
     if (!DocSoNguyen(truong[3], soDu) || soDu > SO_DU_TOI_DA) {
-        return "so du khong hop le";
+        return "số dư không hợp lệ";
     }
     return "";
 }
@@ -96,7 +96,7 @@ std::string KiemTraTruongChung(const std::vector<std::string>& truong, long long
 std::unique_ptr<TaiKhoan> TaoTaiKhoan(const std::vector<std::string>& truong, std::string& loi) {
     std::unique_ptr<TaiKhoan> ketQua;
     if (truong.size() != SO_TRUONG) {
-        loi = "sai so truong (can " + std::to_string(SO_TRUONG) + ")";
+        loi = "sai số trường (cần " + std::to_string(SO_TRUONG) + ")";
         return ketQua;
     }
 
@@ -109,23 +109,23 @@ std::unique_ptr<TaiKhoan> TaoTaiKhoan(const std::vector<std::string>& truong, st
     if (truong[0] == LOAI_FILE_TIET_KIEM) {
         double laiSuat = 0.0;
         if (!DocSoThuc(truong[4], laiSuat) || laiSuat < LAI_SUAT_TOI_THIEU || laiSuat > LAI_SUAT_TOI_DA) {
-            loi = "lai suat khong hop le";
+            loi = "lãi suất không hợp lệ";
         } else if (soDu < 0) {
-            loi = "tai khoan tiet kiem khong duoc co so du am";
+            loi = "tài khoản tiết kiệm không được có số dư âm";
         } else {
             ketQua.reset(new TaiKhoanTietKiem(truong[1], truong[2], soDu, laiSuat));
         }
     } else if (truong[0] == LOAI_FILE_THANH_TOAN) {
         long long hanMuc = 0;
         if (!DocSoNguyen(truong[4], hanMuc) || hanMuc < 0 || hanMuc > HAN_MUC_TIN_DUNG_TOI_DA) {
-            loi = "han muc tin dung khong hop le";
+            loi = "hạn mức tín dụng không hợp lệ";
         } else if (soDu < -hanMuc) {
-            loi = "so du am vuot qua han muc tin dung";
+            loi = "số dư âm vượt quá hạn mức tín dụng";
         } else {
             ketQua.reset(new TaiKhoanThanhToan(truong[1], truong[2], soDu, hanMuc));
         }
     } else {
-        loi = "loai tai khoan '" + truong[0] + "' khong hop le (TIETKIEM hoac THANHTOAN)";
+        loi = "loại tài khoản '" + truong[0] + "' không hợp lệ (TIETKIEM hoặc THANHTOAN)";
     }
     return ketQua;
 }
@@ -171,14 +171,14 @@ namespace KhoFile {
             std::string loi;
             std::unique_ptr<TaiKhoan> taiKhoan = TaoTaiKhoan(TachDong(dong), loi);
             if (taiKhoan && DaTonTai(danhSach, taiKhoan->LaySoTaiKhoan())) {
-                loi = "trung so tai khoan " + taiKhoan->LaySoTaiKhoan();
+                loi = "trùng số tài khoản " + taiKhoan->LaySoTaiKhoan();
                 taiKhoan.reset();
             }
             if (taiKhoan) {
                 danhSach.push_back(std::move(taiKhoan));
             }
             else {
-                cacLoi.push_back("Dong " + std::to_string(dongHienTai) + ": " + loi);
+                cacLoi.push_back("Dòng " + std::to_string(dongHienTai) + ": " + loi);
             }
         }
         return true;

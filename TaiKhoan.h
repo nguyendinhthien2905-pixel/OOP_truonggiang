@@ -1,4 +1,4 @@
-//  TaiKhoan.h - Lop co so cua he thong tai khoan ngan hang
+﻿//  TaiKhoan.h - Lop co so cua he thong tai khoan ngan hang
 
 #ifndef TAIKHOAN_H_INCLUDED_
 #define TAIKHOAN_H_INCLUDED_
@@ -33,7 +33,6 @@ public:
     void DatSoDu(long long soDu);
 
 
-
     bool KiemTraSoTienRut(long long soTien, std::string& thongBao) const;
     std::string LayDongChung() const;
 
@@ -42,6 +41,7 @@ public:
     // ---- Da hinh ----
     virtual bool RutTien(long long soTien, std::string& thongBao);
     virtual void HienThiThongTin() const;
+    virtual void HienThiHanMucRut() const;           // Quy dinh rut tien cua tung loai
     virtual std::string LayLoaiTaiKhoan() const;
     virtual std::string LayThongSoRieng() const;    // Cot "Thong so rieng" cua bang
     virtual std::string LayQuyDinhRut() const;      // Mo ta ngan quy dinh rut tien

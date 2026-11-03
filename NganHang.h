@@ -1,4 +1,4 @@
-//  NganHang.h - Lop quan ly danh sach tai khoan va dieu khien menu ATM
+﻿//  NganHang.h - Lop quan ly danh sach tai khoan va dieu khien menu ATM
 #ifndef NGANHANG_H_INCLUDED_
 #define NGANHANG_H_INCLUDED_
 

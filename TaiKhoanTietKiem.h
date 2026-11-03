@@ -1,4 +1,4 @@
-// =====================================================================
+﻿// =====================================================================
 //  TaiKhoanTietKiem.h - Lop con: tai khoan tiet kiem (co lai suat)
 // =====================================================================
 #ifndef TAIKHOANTIETKIEM_H_INCLUDED_
@@ -27,6 +27,7 @@ public:
     // ---- Ghi de cac phuong thuc ao ----
     bool RutTien(long long soTien, std::string& thongBao) override;
     void HienThiThongTin() const override;
+    void HienThiHanMucRut() const override;
     std::string LayLoaiTaiKhoan() const override;
     std::string LayThongSoRieng() const override;
     std::string LayQuyDinhRut() const override;

@@ -1,4 +1,4 @@
-//  TaiKhoanThanhToan.cpp - Cai dat lop TaiKhoanThanhToan
+﻿//  TaiKhoanThanhToan.cpp - Cai dat lop TaiKhoanThanhToan
 #include "TaiKhoanThanhToan.h"
 
 #include "HangSo.h"
@@ -43,15 +43,15 @@ bool TaiKhoanThanhToan::RutTien(long long soTien, std::string& thongBao) {
         return false;
     }
     if (soTien > LaySoTienKhaDung()) {
-        thongBao = "Vuot han muc tin dung. So tien kha dung toi da: "
+        thongBao = "Vượt hạn mức tín dụng. Số tiền khả dụng tối đa: "
             + TienIch::DinhDangTien(LaySoTienKhaDung()) + " VND.";
         return false;
     }
     DatSoDu(LaySoDu() - soTien);
-    thongBao = "Rut tien thanh cong.";
+    thongBao = "Rút tiền thành công.";
     if (LaySoDu() < 0) {
-        thongBao += " Tai khoan dang ghi no " + TienIch::DinhDangTien(LayDuNo())
-            + " VND (trong han muc tin dung).";
+        thongBao += " Tài khoản đang ghi nợ " + TienIch::DinhDangTien(LayDuNo())
+            + " VND (trong hạn mức tín dụng).";
     }
     return true;
 }
@@ -59,25 +59,30 @@ bool TaiKhoanThanhToan::RutTien(long long soTien, std::string& thongBao) {
 // In thong tin chung + han muc, du no, so tien kha dung
 
 void TaiKhoanThanhToan::HienThiThongTin() const {
-    TaiKhoan::HienThiThongTin();
-    TienIch::InDong("Han muc tin dung", TienIch::DinhDangTien(m_HanMucTinDung) + " VND", MAU_VANG);
-    TienIch::InDong("Du no hien tai", TienIch::DinhDangTien(LayDuNo()) + " VND",
+    TaiKhoan::HienThiThongTin();            // nhom 1 + dong "So du hien tai"
+    TienIch::InDong("Dư nợ hiện tại", TienIch::DinhDangTien(LayDuNo()) + " VND",
         LayDuNo() > 0 ? MAU_DO : MAU_XANH_LA);
-    TienIch::InDong("So tien kha dung", TienIch::DinhDangTien(LaySoTienKhaDung()) + " VND", MAU_XANH_LA);
-    TienIch::InDong("Trang thai", LayDuNo() > 0 ? "Dang su dung han muc tin dung" : "Binh thuong",
+    TienIch::InNganCach();
+    HienThiHanMucRut();
+    TienIch::InDong("Trạng thái", LayDuNo() > 0 ? "Đang dùng hạn mức tín dụng" : "Bình thường",
         LayDuNo() > 0 ? MAU_DO : MAU_XANH_LA);
+}
+
+void TaiKhoanThanhToan::HienThiHanMucRut() const {
+    TienIch::InDong("Hạn mức tín dụng", TienIch::DinhDangTien(m_HanMucTinDung) + " VND", MAU_VANG);
+    TienIch::InDong("Số tiền khả dụng", TienIch::DinhDangTien(LaySoTienKhaDung()) + " VND", MAU_XANH_LA);
 }
 
 std::string TaiKhoanThanhToan::LayLoaiTaiKhoan() const {
-    return "Thanh toan";
+    return "Thanh toán";
 }
 
 std::string TaiKhoanThanhToan::LayThongSoRieng() const {
-    return "Han muc " + TienIch::DinhDangTien(m_HanMucTinDung);
+    return "Hạn mức " + TienIch::DinhDangTien(m_HanMucTinDung);
 }
 
 std::string TaiKhoanThanhToan::LayQuyDinhRut() const {
-    return "Duoc rut vuot so du trong han muc tin dung (" + TienIch::DinhDangTien(m_HanMucTinDung)
+    return "Được rút vượt số dư trong hạn mức tín dụng (" + TienIch::DinhDangTien(m_HanMucTinDung)
         + " VND).";
 }
 
@@ -96,7 +101,7 @@ void TaiKhoanThanhToan::Nhap(std::istream& is) {
         return;
     }
     long long hanMuc = 0;
-    if (!TienIch::NhapSoNguyen(is, "  Han muc tin dung (VND): ", hanMuc, 0, HAN_MUC_TIN_DUNG_TOI_DA)) {
+    if (!TienIch::NhapSoNguyen(is, "  Hạn mức tín dụng (VND): ", hanMuc, 0, HAN_MUC_TIN_DUNG_TOI_DA)) {
         is.setstate(std::ios::failbit);
         return;
     }

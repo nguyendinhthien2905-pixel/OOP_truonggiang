@@ -1,4 +1,4 @@
-#include "TaiKhoan.h"
+﻿#include "TaiKhoan.h"
 
 #include <iomanip>
 
@@ -50,23 +50,23 @@ void TaiKhoan::DatSoDu(long long soDu) {
 
 bool TaiKhoan::NapTien(long long soTien, std::string& thongBao) {
     if (soTien <= 0) {
-        thongBao = "So tien nap phai lon hon 0.";
+        thongBao = "Số tiền nạp phải lớn hơn 0.";
         return false;
     }
     if (m_SoDu + soTien > SO_DU_TOI_DA) {
-        thongBao = "So du sau khi nap vuot gioi han cho phep ("
+        thongBao = "Số dư sau khi nạp vượt giới hạn cho phép ("
             + TienIch::DinhDangTien(SO_DU_TOI_DA) + " VND).";
         return false;
     }
     m_SoDu += soTien;
-    thongBao = "Nap tien thanh cong.";
+    thongBao = "Nạp tiền thành công.";
     return true;
 }
 
 
 bool TaiKhoan::KiemTraSoTienRut(long long soTien, std::string& thongBao) const {
     if (soTien <= 0) {
-        thongBao = "So tien rut phai lon hon 0.";
+        thongBao = "Số tiền rút phải lớn hơn 0.";
         return false;
     }
     return true;
@@ -80,25 +80,29 @@ bool TaiKhoan::RutTien(long long soTien, std::string& thongBao) {
         return false;
     }
     if (soTien > m_SoDu) {
-        thongBao = "So du khong du de thuc hien giao dich.";
+        thongBao = "Số dư không đủ để thực hiện giao dịch.";
         return false;
     }
     m_SoDu -= soTien;
-    thongBao = "Rut tien thanh cong.";
+    thongBao = "Rút tiền thành công.";
     return true;
 }
 
 
 void TaiKhoan::HienThiThongTin() const {
-    TienIch::InDong("So tai khoan", m_SoTaiKhoan);
-    TienIch::InDong("Chu tai khoan", m_TenChuTaiKhoan);
-    TienIch::InDong("Loai tai khoan", LayLoaiTaiKhoan(), MAU_VANG);
-    TienIch::InDong("So du hien tai", TienIch::DinhDangTien(m_SoDu) + " VND",
+    TienIch::InDong("Số tài khoản", m_SoTaiKhoan);
+    TienIch::InDong("Chủ tài khoản", m_TenChuTaiKhoan);
+    TienIch::InDong("Loại tài khoản", LayLoaiTaiKhoan(), MAU_VANG);
+    TienIch::InNganCach();
+    TienIch::InDong("Số dư hiện tại", TienIch::DinhDangTien(m_SoDu) + " VND",
         m_SoDu < 0 ? MAU_DO : MAU_XANH_LA);
 }
 
+void TaiKhoan::HienThiHanMucRut() const {
+}
+
 std::string TaiKhoan::LayLoaiTaiKhoan() const {
-    return "Tai khoan";
+    return "Tài khoản";
 }
 
 std::string TaiKhoan::LayThongSoRieng() const {
@@ -106,7 +110,7 @@ std::string TaiKhoan::LayThongSoRieng() const {
 }
 
 std::string TaiKhoan::LayQuyDinhRut() const {
-    return "Khong duoc rut qua so du.";
+    return "Không được rút quá số dư.";
 }
 
 
@@ -126,10 +130,10 @@ void TaiKhoan::Nhap(std::istream& is) {
     std::string ten;
     long long soDu = 0;
 
-    if (!TienIch::NhapChuoiSo(is, "  So tai khoan (" + std::to_string(DO_DAI_SO_TAI_KHOAN)
-        + " chu so): ", DO_DAI_SO_TAI_KHOAN, soTaiKhoan)
-        || !TienIch::NhapChuoi(is, "  Ten chu tai khoan: ", ten, DO_DAI_TEN_TOI_DA)
-        || !TienIch::NhapSoNguyen(is, "  So du ban dau (VND): ", soDu, 0, SO_DU_TOI_DA)) {
+    if (!TienIch::NhapChuoiSo(is, "  Số tài khoản (" + std::to_string(DO_DAI_SO_TAI_KHOAN)
+        + " chữ số): ", DO_DAI_SO_TAI_KHOAN, soTaiKhoan)
+        || !TienIch::NhapChuoi(is, "  Tên chủ tài khoản (không dấu): ", ten, DO_DAI_TEN_TOI_DA)
+        || !TienIch::NhapSoNguyen(is, "  Số dư ban đầu (VND): ", soDu, 0, SO_DU_TOI_DA)) {
         is.setstate(std::ios::failbit);
         return;
     }
@@ -142,15 +146,13 @@ void TaiKhoan::Nhap(std::istream& is) {
 // | STK | Ten | Loai | So du | Thong so rieng |
 
 void TaiKhoan::Xuat(std::ostream& os) const {
-    const std::ios_base::fmtflags coCu = os.flags();
     const std::string ke = " " + TienIch::KeDoc() + " ";
-    os << TienIch::KeDoc() << " " << std::left << std::setw(DO_RONG_COT_SO_TAI_KHOAN) << m_SoTaiKhoan
-        << ke << std::setw(DO_RONG_COT_TEN) << m_TenChuTaiKhoan
-        << ke << std::setw(DO_RONG_COT_LOAI) << LayLoaiTaiKhoan()
-        << ke << std::right << std::setw(DO_RONG_COT_SO_DU) << TienIch::DinhDangTien(m_SoDu)
-        << ke << std::left << std::setw(DO_RONG_COT_THONG_SO) << LayThongSoRieng()
+    os << TienIch::KeDoc() << " " << TienIch::CanTrai(m_SoTaiKhoan, DO_RONG_COT_SO_TAI_KHOAN)
+        << ke << TienIch::CanTrai(m_TenChuTaiKhoan, DO_RONG_COT_TEN)
+        << ke << TienIch::CanTrai(LayLoaiTaiKhoan(), DO_RONG_COT_LOAI)
+        << ke << TienIch::CanPhai(TienIch::DinhDangTien(m_SoDu), DO_RONG_COT_SO_DU)
+        << ke << TienIch::CanTrai(LayThongSoRieng(), DO_RONG_COT_THONG_SO)
         << " " << TienIch::KeDoc();
-    os.flags(coCu);
 }
 
 std::istream& operator>>(std::istream& is, TaiKhoan& taiKhoan) {
@@ -178,15 +180,12 @@ void TaiKhoan::InDuongKeBang(std::ostream& os, int loai) {
 }
 
 void TaiKhoan::InTieuDeBang(std::ostream& os) {
-    const std::ios_base::fmtflags coCu = os.flags();
     const std::string ke = " " + TienIch::KeDoc() + " ";
-    os << std::left
-        << "  " << TienIch::KeDoc() << " " << std::setw(DO_RONG_COT_STT) << "STT"
-        << ke << std::setw(DO_RONG_COT_SO_TAI_KHOAN) << "So tai khoan"
-        << ke << std::setw(DO_RONG_COT_TEN) << "Chu tai khoan"
-        << ke << std::setw(DO_RONG_COT_LOAI) << "Loai"
-        << ke << std::right << std::setw(DO_RONG_COT_SO_DU) << "So du (VND)"
-        << ke << std::left << std::setw(DO_RONG_COT_THONG_SO) << "Thong so rieng"
+    os << TienIch::LeTrai(DO_RONG_BANG) << TienIch::KeDoc() << " " << TienIch::CanTrai("STT", DO_RONG_COT_STT)
+        << ke << TienIch::CanTrai("Số tài khoản", DO_RONG_COT_SO_TAI_KHOAN)
+        << ke << TienIch::CanTrai("Chủ tài khoản", DO_RONG_COT_TEN)
+        << ke << TienIch::CanTrai("Loại", DO_RONG_COT_LOAI)
+        << ke << TienIch::CanPhai("Số dư (VND)", DO_RONG_COT_SO_DU)
+        << ke << TienIch::CanTrai("Thông số riêng", DO_RONG_COT_THONG_SO)
         << " " << TienIch::KeDoc() << "\n";
-    os.flags(coCu);
 }

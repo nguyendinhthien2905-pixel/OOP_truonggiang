@@ -1,4 +1,4 @@
-// Cac hang so dung chung cho toan bo chuong trinh
+﻿// Cac hang so dung chung cho toan bo chuong trinh
 #ifndef HANGSO_H_INCLUDED_
 #define HANGSO_H_INCLUDED_
 
@@ -27,5 +27,7 @@ const int DO_RONG_COT_TEN = DO_DAI_TEN_TOI_DA;
 const int DO_RONG_COT_LOAI = 10;
 const int DO_RONG_COT_SO_DU = 19;
 const int DO_RONG_COT_THONG_SO = 22;
+const int DO_RONG_BANG = 1 + (DO_RONG_COT_STT + 3) + (DO_RONG_COT_SO_TAI_KHOAN + 3) + (DO_RONG_COT_TEN + 3)
+                       + (DO_RONG_COT_LOAI + 3) + (DO_RONG_COT_SO_DU + 3) + (DO_RONG_COT_THONG_SO + 3);
 
 #endif

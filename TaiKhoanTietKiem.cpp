@@ -1,4 +1,4 @@
-// 
+﻿// 
 //  TaiKhoanTietKiem.cpp - Cai dat lop TaiKhoanTietKiem
 
 #include "TaiKhoanTietKiem.h"
@@ -54,8 +54,8 @@ bool TaiKhoanTietKiem::RutTien(long long soTien, std::string& thongBao) {
         return false;
     }
     if (soTien > HAN_MUC_RUT_TIET_KIEM) {
-        thongBao = "Tai khoan tiet kiem chi duoc rut toi da "
-            + TienIch::DinhDangTien(HAN_MUC_RUT_TIET_KIEM) + " VND moi lan.";
+        thongBao = "Tài khoản tiết kiệm chỉ được rút tối đa "
+            + TienIch::DinhDangTien(HAN_MUC_RUT_TIET_KIEM) + " VND mỗi lần.";
         return false;
     }
     if (LaySoDu() - soTien < SO_DU_TOI_THIEU_TIET_KIEM) {
@@ -63,39 +63,43 @@ bool TaiKhoanTietKiem::RutTien(long long soTien, std::string& thongBao) {
         if (toiDaRutDuoc < 0) {
             toiDaRutDuoc = 0;
         }
-        thongBao = "Phai giu lai toi thieu " + TienIch::DinhDangTien(SO_DU_TOI_THIEU_TIET_KIEM)
-            + " VND. So tien co the rut toi da: " + TienIch::DinhDangTien(toiDaRutDuoc) + " VND.";
+        thongBao = "Phải giữ lại tối thiểu " + TienIch::DinhDangTien(SO_DU_TOI_THIEU_TIET_KIEM)
+            + " VND. Số tiền có thể rút tối đa: " + TienIch::DinhDangTien(toiDaRutDuoc) + " VND.";
         return false;
     }
     DatSoDu(LaySoDu() - soTien);
-    thongBao = "Rut tien thanh cong.";
+    thongBao = "Rút tiền thành công.";
     return true;
 }
 
 // In thong tin chung + lai suat va tien lai du kien
 void TaiKhoanTietKiem::HienThiThongTin() const {
-    TaiKhoan::HienThiThongTin();
+    TaiKhoan::HienThiThongTin();            // nhom 1 + dong "So du hien tai"
     const long long tienLaiNam = TinhTienLaiNam();
-    TienIch::InDong("Lai suat", TienIch::DinhDangPhanTram(m_LaiSuat) + " / nam", MAU_VANG);
-    TienIch::InDong("Tien lai du kien (1 thang)", TienIch::DinhDangTien(TinhTienLaiThang()) + " VND", MAU_XANH_LA);
-    TienIch::InDong("Tien lai du kien (1 nam)", TienIch::DinhDangTien(tienLaiNam) + " VND", MAU_XANH_LA);
-    TienIch::InDong("So du sau 1 nam (lai don)", TienIch::DinhDangTien(LaySoDu() + tienLaiNam) + " VND", MAU_XANH_LA);
-    TienIch::InDong("So du toi thieu phai giu", TienIch::DinhDangTien(SO_DU_TOI_THIEU_TIET_KIEM) + " VND");
-    TienIch::InDong("Han muc rut moi lan", TienIch::DinhDangTien(HAN_MUC_RUT_TIET_KIEM) + " VND");
+    TienIch::InDong("Lãi suất", TienIch::DinhDangPhanTram(m_LaiSuat) + " / năm", MAU_VANG);
+    TienIch::InDong("Lãi dự kiến (1 năm)", TienIch::DinhDangTien(tienLaiNam) + " VND", MAU_XANH_LA);
+    TienIch::InDong("Số dư sau 1 năm", TienIch::DinhDangTien(LaySoDu() + tienLaiNam) + " VND", MAU_XANH_LA);
+    TienIch::InNganCach();
+    HienThiHanMucRut();                     // nhom 3: dung chung voi man hinh Rut tien
+}
+
+void TaiKhoanTietKiem::HienThiHanMucRut() const {
+    TienIch::InDong("Số dư tối thiểu", TienIch::DinhDangTien(SO_DU_TOI_THIEU_TIET_KIEM) + " VND");
+    TienIch::InDong("Hạn mức rút/lần", TienIch::DinhDangTien(HAN_MUC_RUT_TIET_KIEM) + " VND");
 }
 
 std::string TaiKhoanTietKiem::LayLoaiTaiKhoan() const {
-    return "Tiet kiem";
+    return "Tiết kiệm";
 }
 
 std::string TaiKhoanTietKiem::LayThongSoRieng() const {
-    return "Lai suat " + TienIch::DinhDangPhanTram(m_LaiSuat) + "/nam";
+    return "Lãi suất " + TienIch::DinhDangPhanTram(m_LaiSuat) + "/năm";
 }
 
 std::string TaiKhoanTietKiem::LayQuyDinhRut() const {
-    return "Giu lai toi thieu " + TienIch::DinhDangTien(SO_DU_TOI_THIEU_TIET_KIEM)
-        + " VND; toi da " + TienIch::DinhDangTien(HAN_MUC_RUT_TIET_KIEM)
-        + " VND/lan.";
+    return "Giữ lại tối thiểu " + TienIch::DinhDangTien(SO_DU_TOI_THIEU_TIET_KIEM)
+        + " VND; tối đa " + TienIch::DinhDangTien(HAN_MUC_RUT_TIET_KIEM)
+        + " VND/lần.";
 }
 
 // TIETKIEM|SoTaiKhoan|Ten|SoDu|LaiSuat
@@ -114,8 +118,8 @@ void TaiKhoanTietKiem::Nhap(std::istream& is) {
         return;
     }
     double laiSuat = 0.0;
-    if (!TienIch::NhapSoThuc(is, "  Lai suat (%/nam, tu " + TienIch::DinhDangPhanTram(LAI_SUAT_TOI_THIEU)
-        + " den " + TienIch::DinhDangPhanTram(LAI_SUAT_TOI_DA) + "): ",
+    if (!TienIch::NhapSoThuc(is, "  Lãi suất (%/năm, từ " + TienIch::DinhDangPhanTram(LAI_SUAT_TOI_THIEU)
+        + " đến " + TienIch::DinhDangPhanTram(LAI_SUAT_TOI_DA) + "): ",
         laiSuat, LAI_SUAT_TOI_THIEU, LAI_SUAT_TOI_DA)) {
         is.setstate(std::ios::failbit);
         return;
