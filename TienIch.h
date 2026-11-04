@@ -39,6 +39,7 @@ namespace TienIch {
     void XoaManHinh();
     void DatViTriCon(int x, int y);
     void HienConTro(bool hien);
+    void ManHinhLoading(const std::string& tieuDe, int thoiGianMs);   // màn hình loading lúc khởi động
 
     int LayDoRongConsole();                                         // số cột của cửa sổ console hiện tại
     std::string LeTrai(int doRongNoiDung);                          // chuỗi khoảng trắng để đẩy nội dung ra giữa màn hình

@@ -262,7 +262,7 @@ namespace TienIch {
     //khởi tạo màn hình console
     void KhoiTaoConsole() {
         std::system("mode con: cols=120 lines=40");                     //thiết đặt kích thước màn hình console: 120 cột và 40 dòng
-        SetConsoleTitleA("QUAN LY TAI KHOAN NGAN HANG - MAY ATM");      //thiết đặt tiêu đề cho màn hình console
+        SetConsoleTitleA(TIEU_DE_CONSOLE);      //thiết đặt tiêu đề cho màn hình console
         CONSOLE_SCREEN_BUFFER_INFO thongTin;                            //thiết đặt màu săc mặc định cho hệ thống
         if (GetConsoleScreenBufferInfo(LayManHinh(), &thongTin)) {
             g_mauMacDinh = thongTin.wAttributes;
@@ -561,6 +561,119 @@ namespace TienIch {
         InVienNgang(KHUNG_DUOI_TRAI, KHUNG_DUOI_PHAI, DO_RONG_KHUNG);
 
         DatMauMacDinh();
+    }
+
+    //màn hình loading lúc khởi động: banner + khung tiêu đề (giống hệt các màn hình menu) + thanh tiến trình chạy trong thoiGianMs mili giây
+    void ManHinhLoading(const std::string& tieuDe, int thoiGianMs) {
+        //số dòng InTieuDe in ra: 1 dòng trống + banner + phụ đề và 1 dòng trống + khung 3 dòng
+        const int SO_DONG_TIEU_DE = 1 + SO_DONG_BANNER + 2 + 3;
+        const int SO_DONG_NOI_DUNG = SO_DONG_TIEU_DE + 1 + 2;       // + 1 dòng trống + thanh loading + dòng trạng thái
+        const int DO_RONG_PHAN_TRAM = 5;                            // chỗ dành cho chữ "100%" ở góc phải dưới thanh
+        if (thoiGianMs < 1) {
+            thoiGianMs = 1;
+        }
+
+        //canh nội dung ra giữa chiều cao cửa sổ console
+        int yDau = 0;
+        int caoManHinh = 40;
+        CONSOLE_SCREEN_BUFFER_INFO thongTin;
+        if (GetConsoleScreenBufferInfo(LayManHinh(), &thongTin)) {
+            yDau = thongTin.srWindow.Top;
+            caoManHinh = thongTin.srWindow.Bottom - thongTin.srWindow.Top + 1;
+        }
+        const int yTren = yDau + ((caoManHinh > SO_DONG_NOI_DUNG) ? (caoManHinh - SO_DONG_NOI_DUNG) / 2 : 0);
+        const int yThanh = yTren + SO_DONG_TIEU_DE + 1;
+        const int yTrangThai = yThanh + 1;
+        const std::string le = LeTrai(DO_RONG_KHUNG);
+
+        HienConTro(false);
+        XoaManHinh();
+        DatViTriCon(0, yTren);
+        InTieuDe(tieuDe);                   //phần tiêu đề vẽ 1 lần, vòng lặp bên dưới chỉ vẽ lại thanh loading
+
+        //tiến độ tính theo thời gian thật (GetTickCount) nên luôn đúng thoiGianMs dù Sleep bị lệch
+        const DWORD batDau = GetTickCount();
+        int soOCu = -1;
+        int phanTramCu = -1;
+        while (true) {
+            long long troiQua = static_cast<long long>(GetTickCount() - batDau);
+            if (troiQua > thoiGianMs) {
+                troiQua = thoiGianMs;
+            }
+            const int soOday = static_cast<int>(troiQua * DO_RONG_KHUNG / thoiGianMs);   // số ô đã chạy, thanh dài bằng khung
+            const int phanTram = static_cast<int>(troiQua * 100 / thoiGianMs);
+
+            if (soOday != soOCu || phanTram != phanTramCu) {
+                //thanh loading: ô đã chạy chuyển màu hồng (#ff79c6) -> tím (#bd93f9) giống banner, ô chưa chạy là ░ xám tối
+                DatViTriCon(0, yThanh);
+                std::cout << le;
+                if (g_coMau24Bit) {
+                    std::string thanh;
+                    for (int i = 0; i < DO_RONG_KHUNG; i++) {
+                        if (i < soOday) {
+                            const int r = 255 + (189 - 255) * i / DO_RONG_KHUNG;
+                            const int g = 121 + (147 - 121) * i / DO_RONG_KHUNG;
+                            const int b = 198 + (249 - 198) * i / DO_RONG_KHUNG;
+                            thanh += MaANSI(38, r, g, b) + "█";
+                        }
+                        else {
+                            if (i == soOday) {
+                                thanh += MaANSI(38, 80, 80, 100);
+                            }
+                            thanh += "░";
+                        }
+                    }
+                    std::cout << thanh << "\x1b[0m";
+                }
+                else {
+                    DatMau(MAU_CHU_DAO);
+                    std::cout << LapLai("█", soOday);
+                    DatMau(MAU_XAM);
+                    std::cout << LapLai("░", DO_RONG_KHUNG - soOday);
+                }
+                DatMauMacDinh();
+
+                //dòng trạng thái (chữ xám, bên trái) và phần trăm (chữ trắng, bên phải) ngay dưới thanh
+                std::string trangThai;
+                if (phanTram < 35) {
+                    trangThai = "Đang khởi động hệ thống...";
+                }
+                else if (phanTram < 75) {
+                    trangThai = "Đang tải dữ liệu tài khoản...";
+                }
+                else if (phanTram < 100) {
+                    trangThai = "Sắp xong...";
+                }
+                else {
+                    trangThai = "Sẵn sàng!";
+                }
+                DatViTriCon(0, yTrangThai);
+                std::cout << le;
+                DatMau(MAU_XAM);
+                std::cout << CanTrai(trangThai, DO_RONG_KHUNG - DO_RONG_PHAN_TRAM);
+                DatMau(MAU_TRANG);
+                std::cout << CanPhai(std::to_string(phanTram) + "%", DO_RONG_PHAN_TRAM);
+                DatMauMacDinh();
+                std::cout.flush();
+
+                soOCu = soOday;
+                phanTramCu = phanTram;
+            }
+
+            if (troiQua >= thoiGianMs) {
+                break;
+            }
+            Sleep(10);
+        }
+
+        //bỏ các phím người dùng lỡ bấm trong lúc loading để không ảnh hưởng menu đầu tiên
+        while (_kbhit()) {
+            _getch();
+        }
+
+        DatMauMacDinh();
+        XoaManHinh();
+        HienConTro(true);
     }
 
     //in một dòng thông tin dạng: NHÃN : GIÁ TRỊ (nhãn màu xám, giá trị tô màu tùy ý)

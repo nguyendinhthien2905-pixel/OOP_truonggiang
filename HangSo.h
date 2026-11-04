@@ -10,6 +10,10 @@ const long long HAN_MUC_TIN_DUNG_TOI_DA = 1000000000LL; // 1 ty
 const double LAI_SUAT_TOI_THIEU = 0.1;                  // %/nam
 const double LAI_SUAT_TOI_DA = 20.0;                    // %/nam
 
+//  Giao dien
+const char* const TIEU_DE_CONSOLE = "QUAN LY TAI KHOAN NGAN HANG - MAY ATM";  // Tieu de cua so console, cung la tieu de man hinh loading
+const int THOI_GIAN_LOADING_MS = 2000;                                          // Thoi gian chay thanh loading (mili giay)
+
 //  File du lieu 
 const char* const TEN_FILE_DU_LIEU = "TaiKhoan.txt";    
 const char* const LOAI_FILE_TIET_KIEM = "TIETKIEM";
